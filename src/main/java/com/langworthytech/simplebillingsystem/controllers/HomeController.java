@@ -1,4 +1,4 @@
-package com.langworthytech.simplebillingsystem;
+package com.langworthytech.simplebillingsystem.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
