@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 
@@ -44,11 +45,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .and()
                 .formLogin()
                     .loginPage("/login")
-                    .failureUrl("/login")
-                    .successForwardUrl("/hello")
+                    .defaultSuccessUrl("/hello", true)
+                    .failureUrl("/login?error=true")
                     .permitAll()
                     .and()
                 .logout()
+                    .invalidateHttpSession(true)
                     .permitAll();
     }
 
@@ -56,19 +58,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         System.out.println("Running AuthenticationManagerBuilder (User Details Service)");
 
-        authenticationManagerBuilder.jdbcAuthentication()
-                .dataSource(dataSource)
-                .passwordEncoder(passwordEncoder())
-        .usersByUsernameQuery("SELECT email as username, password, enabled from users where email = ?")
-        .authoritiesByUsernameQuery(
-                "SELECT u.email as username, a.authority " +
-                "FROM authority a, users u " +
-                "where u.email = ? " +
-                "AND u.id = a.custom_user_id");
+//        authenticationManagerBuilder.jdbcAuthentication()
+//                .dataSource(dataSource)
+//                .passwordEncoder(passwordEncoder())
+//        .usersByUsernameQuery("SELECT email as username, password, enabled from users where email = ?")
+//        .authoritiesByUsernameQuery(
+//                "SELECT u.email as username, a.authority " +
+//                "FROM authority a, users u " +
+//                "where u.email = ? " +
+//                "AND u.id = a.custom_user_id");
 
-//        authenticationManagerBuilder.userDetailsService(
-//                new CustomUserDetailsService(customUserRepository))
-//                .passwordEncoder(passwordEncoder());
+        authenticationManagerBuilder.userDetailsService(
+                new CustomUserDetailsService(customUserRepository))
+                .passwordEncoder(passwordEncoder());
         // This is commented because if a customer Authentication Provider is used, then the User Details Service is not called
         //authenticationManagerBuilder.authenticationProvider(new BasicHttpAuthenticationProvider(userRepository));
     }

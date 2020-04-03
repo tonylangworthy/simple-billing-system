@@ -29,6 +29,6 @@ public class CustomUser {
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Authority> authorities = new ArrayList<>();
 }

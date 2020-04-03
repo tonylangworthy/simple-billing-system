@@ -11,12 +11,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class CustomUserDetailsService implements UserDetailsService {
 
     private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
@@ -38,12 +40,12 @@ public class CustomUserDetailsService implements UserDetailsService {
         logger.info("Running the loadByUsername (User Details Service)");
 
         final Optional<CustomUser> optionalCustomUser = this.customUserRepository.findByEmail(username);
-        System.out.println("Loading the UserDetails");
+        logger.info("Loading the UserDetails");
 
         CustomUser customUser = optionalCustomUser.orElseThrow(() -> new UsernameNotFoundException(username));
 
 
-            System.out.println(customUser.getEmail());
+        logger.info(customUser.getEmail());
 
             CustomUserDetails userDetails = new CustomUserDetails(
                     customUser.getFirstName(),

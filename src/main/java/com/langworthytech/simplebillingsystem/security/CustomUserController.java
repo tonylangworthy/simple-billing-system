@@ -5,19 +5,21 @@ import com.langworthytech.simplebillingsystem.models.RegistrationFormModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.StringBufferInputStream;
@@ -40,13 +42,32 @@ public class CustomUserController {
     @GetMapping("/hello")
     public String hello(ModelMap modelMap, Principal principal) {
         modelMap.put("userName", principal.getName());
-
+        logger.info("Currently Logged in User: " + principal.getName());
         return "hello";
     }
 
-    @GetMapping("/login")
-    public String loginForm() {
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String loginForm(@RequestParam(value = "error", required = false) String error,
+                            @RequestParam(value = "logout", required = false) String logout,
+                            Model model) {
+        String errorMessage = null;
+        if(error != null) {
+            errorMessage = "Username or Password is incorrect !!";
+        }
+        if(logout != null) {
+            errorMessage = "You have been successfully logged out !!";
+        }
+        model.addAttribute("errorMessage", errorMessage);
         return "login";
+    }
+
+    @RequestMapping(value="/logout", method = RequestMethod.GET)
+    public String logoutPage (HttpServletRequest request, HttpServletResponse response) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null){
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
+        return "redirect:/login?logout=true";
     }
 
     @GetMapping("/register")
