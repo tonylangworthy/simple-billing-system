@@ -59,11 +59,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         authenticationManagerBuilder.jdbcAuthentication()
                 .dataSource(dataSource)
                 .passwordEncoder(passwordEncoder())
-        .usersByUsernameQuery("SELECT email as username, password, enabled from users where username = ?")
+        .usersByUsernameQuery("SELECT email as username, password, enabled from users where email = ?")
         .authoritiesByUsernameQuery(
                 "SELECT u.email as username, a.authority " +
-                "FROM users_authorities a, users u " +
-                "where u.username = ? " +
+                "FROM authority a, users u " +
+                "where u.email = ? " +
                 "AND u.id = a.custom_user_id");
 
 //        authenticationManagerBuilder.userDetailsService(
