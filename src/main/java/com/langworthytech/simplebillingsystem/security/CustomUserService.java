@@ -1,9 +1,5 @@
 package com.langworthytech.simplebillingsystem.security;
 
-import com.langworthytech.simplebillingsystem.entities.Authority;
-import com.langworthytech.simplebillingsystem.entities.CustomUser;
-import com.langworthytech.simplebillingsystem.models.RegistrationFormModel;
-import com.langworthytech.simplebillingsystem.repositories.CustomUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

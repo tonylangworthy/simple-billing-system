@@ -1,6 +1,5 @@
-package com.langworthytech.simplebillingsystem.repositories;
+package com.langworthytech.simplebillingsystem.security;
 
-import com.langworthytech.simplebillingsystem.entities.CustomUser;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

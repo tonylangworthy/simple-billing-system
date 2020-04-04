@@ -1,6 +1,5 @@
-package com.langworthytech.simplebillingsystem.repositories;
+package com.langworthytech.simplebillingsystem.security;
 
-import com.langworthytech.simplebillingsystem.entities.Authority;
 import org.springframework.data.repository.CrudRepository;
 
 public interface AuthorityRepository extends CrudRepository<Authority, Long> {

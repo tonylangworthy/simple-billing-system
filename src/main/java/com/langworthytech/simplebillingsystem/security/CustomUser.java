@@ -1,4 +1,4 @@
-package com.langworthytech.simplebillingsystem.entities;
+package com.langworthytech.simplebillingsystem.security;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
