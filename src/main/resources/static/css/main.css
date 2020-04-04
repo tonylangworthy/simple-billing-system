@@ -1,3 +1,12 @@
+.login-form {
+    max-width: 500px;
+    margin-top: 50px;
+}
+.register-form {
+    max-width: 500px;
+    margin-top: 50px;
+}
+
 body {
     background-color: #fff;
 }

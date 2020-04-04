@@ -7,25 +7,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.io.StringBufferInputStream;
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.Map;
 
 @Controller
 public class CustomUserController {
@@ -39,11 +34,12 @@ public class CustomUserController {
         this.userService = userService;
     }
 
-    @GetMapping("/hello")
-    public String hello(ModelMap modelMap, Principal principal) {
-        modelMap.put("userName", principal.getName());
-        logger.info("Currently Logged in User: " + principal.getName());
-        return "hello";
+    @GetMapping("/dashboard")
+    public String dashboard(ModelMap modelMap, Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        modelMap.put("userName", userDetails.getFirstName() + " " + userDetails.getLastName());
+        logger.info("Currently Logged in User: " + userDetails.getFirstName() + " " + userDetails.getLastName());
+        return "dashboard";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)

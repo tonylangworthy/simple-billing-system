@@ -4,9 +4,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-<%
-
-%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -17,8 +14,8 @@
     <body>
 
     	<div class="container">
-
-    		<div class="starter-template">
+        <div class="register-form mx-auto">
+    		<div class="">
     			<h2>Please Register</h2>
     		</div>
             <form:form action="/register" modelAttribute="registration" method="post">
@@ -54,6 +51,7 @@
               </div>
               <button type="submit" class="btn btn-primary">Register</button>
             </form:form>
+        </div>
     	</div>
 
     	<script type="text/javascript" src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
