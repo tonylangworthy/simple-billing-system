@@ -1,5 +1,7 @@
-package com.langworthytech.simplebillingsystem.security;
+package com.langworthytech.simplebillingsystem.config;
 
+import com.langworthytech.simplebillingsystem.security.CustomUserDetailsService;
+import com.langworthytech.simplebillingsystem.security.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,12 +18,13 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private CustomUserRepository customUserRepository;
+    private CustomUserDetailsService customUserDetailsService;
     private DataSource dataSource;
 
     @Autowired
-    public WebSecurityConfig(CustomUserRepository customUserRepository, DataSource dataSource) {
-        this.customUserRepository = customUserRepository;
+    public WebSecurityConfig(CustomUserDetailsService customUserDetailsService, DataSource dataSource) {
+//        this.userRepository = userRepository;
+        this.customUserDetailsService = customUserDetailsService;
         this.dataSource = dataSource;
     }
 
@@ -60,7 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                "AND u.id = a.custom_user_id");
 
         authenticationManagerBuilder.userDetailsService(
-                new CustomUserDetailsService(customUserRepository))
+                customUserDetailsService)
                 .passwordEncoder(passwordEncoder());
         // This is commented because if a customer Authentication Provider is used, then the User Details Service is not called
         //authenticationManagerBuilder.authenticationProvider(new BasicHttpAuthenticationProvider(userRepository));

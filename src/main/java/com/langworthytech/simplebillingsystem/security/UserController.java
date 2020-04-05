@@ -1,5 +1,6 @@
 package com.langworthytech.simplebillingsystem.security;
 
+import com.langworthytech.simplebillingsystem.util.ValidationError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +20,15 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @Controller
-public class CustomUserController {
+public class UserController {
 
-    private static final Logger logger = LoggerFactory.getLogger(CustomUserController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    private CustomUserService userService;
+    private UserService userService;
 
     @Autowired
-    public CustomUserController(CustomUserService userService) {
+    public UserController(UserService userService) {
+
         this.userService = userService;
     }
 
@@ -43,13 +45,16 @@ public class CustomUserController {
                             @RequestParam(value = "logout", required = false) String logout,
                             Model model) {
         String errorMessage = null;
+        String successMessage = null;
         if(error != null) {
-            errorMessage = "Username or Password is incorrect !!";
+            errorMessage = "Username or Password is incorrect!";
+            model.addAttribute("errorMessage", errorMessage);
         }
         if(logout != null) {
-            errorMessage = "You have been successfully logged out !!";
+            successMessage = "You have been successfully logged out";
+            model.addAttribute("successMessage", successMessage);
         }
-        model.addAttribute("errorMessage", errorMessage);
+
         return "login";
     }
 
@@ -74,7 +79,8 @@ public class CustomUserController {
             @ModelAttribute("registration") RegistrationFormModel registrationFormModel,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes,
-            ModelMap model
+            ModelMap model,
+            HttpServletRequest request
             ) {
         if(bindingResult.hasErrors()) {
 
@@ -82,33 +88,41 @@ public class CustomUserController {
                 FieldError fieldError = (FieldError) e;
                 logger.info("Object name: " + fieldError.getField());
                 logger.info("Default Message: " + e.getDefaultMessage());
-                RegistrationValidationError regError = new RegistrationValidationError();
+                ValidationError regError = new ValidationError();
                 regError.setFieldName(fieldError.getField());
                 regError.setHasErrors(true);
                 regError.setErrorMessage(fieldError.getDefaultMessage());
+
                 redirectAttributes.addFlashAttribute(regError.getFieldName(), regError);
 
             });
-            logger.info(registrationFormModel.getFirstName());
-            logger.info(registrationFormModel.getLastName());
-            logger.info(registrationFormModel.getEmail());
-            logger.info(registrationFormModel.getFirstPassword());
-            logger.info(registrationFormModel.getConfirmPassword());
 
-            model.addAttribute("firstName", registrationFormModel.getFirstName());
-            model.addAttribute("lastName", registrationFormModel.getLastName());
-            model.addAttribute("email", registrationFormModel.getEmail());
-            model.addAttribute("firstPassword", registrationFormModel.getFirstPassword());
-            model.addAttribute("confirmPassword", registrationFormModel.getConfirmPassword());
+//            redirectAttributes.addFlashAttribute("firstName", registrationFormModel.getFirstName());
+
+//            model.addAttribute("firstName", registrationFormModel.getFirstName());
+//            model.addAttribute("lastName", registrationFormModel.getLastName());
+//            model.addAttribute("email", registrationFormModel.getEmail());
+//            model.addAttribute("firstPassword", registrationFormModel.getFirstPassword());
+//            model.addAttribute("confirmPassword", registrationFormModel.getConfirmPassword());
 
             //logger.info(redirectAttributes.getFlashAttributes().toString());
             return "redirect:/register";
         }
 
         // If validation passes, save user
-        userService.registerNewUser(registrationFormModel);
+        try {
+            User user = userService.registerNewUser(registrationFormModel);
+        } catch (EmailExistsException e) {
 
-        return "hello";
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/register";
+        } catch (RoleNotFoundException e) {
+            logger.error(e.getMessage());
+        }
+
+        // Redirect to the login page with a registration successful message
+        redirectAttributes.addFlashAttribute("successMessage", "Registration Successful! Please log in.");
+        return "redirect:/login";
 
     }
 

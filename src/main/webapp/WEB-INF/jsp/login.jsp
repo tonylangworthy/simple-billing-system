@@ -5,8 +5,8 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.3.1/css/bootstrap.min.css" />
-    <c:url value="/css/main.css" var="jstlCss" />
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/webjars/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <c:url value="${pageContext.request.contextPath}/css/main.css" var="jstlCss" />
     <link type="text/css" href="${jstlCss}" rel="stylesheet" />
     </head>
     <body>
@@ -19,6 +19,9 @@
                 </div>
                 <c:if test="${not empty errorMessage}">
                     <div class="alert alert-danger" role="alert">${errorMessage}</div>
+                </c:if>
+                <c:if test="${not empty successMessage}">
+                    <div class="alert alert-success" role="alert">${successMessage}</div>
                 </c:if>
                 <form method="post" action="/login">
                   <div class="form-group">
@@ -33,12 +36,13 @@
                     <input type="checkbox" class="form-check-input" id="remember-me">
                     <label class="form-check-label" for="remember-me">Remember Me</label>
                   </div>
+                  <div class="btn btn-link float-right"><a href="/register">Register here</a></div>
                   <button type="submit" class="btn btn-primary">Login</button>
                 </form>
                 </div>
             </div>
 
-     	<script type="text/javascript" src="webjars/jquery/3.0.0/jquery.min.js"></script>
-     	<script type="text/javascript" src="webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+     	<script type="text/javascript" src="${pageContext.request.contextPath}/webjars/jquery/3.0.0/jquery.min.js"></script>
+     	<script type="text/javascript" src="${pageContext.request.contextPath}/webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     </body>
 </html>

@@ -1,9 +1,9 @@
-package com.langworthytech.simplebillingsystem.security;
+package com.langworthytech.simplebillingsystem.util;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RegistrationValidationError {
+public class ValidationError {
 
     private List<String> errors = new ArrayList<>();
 

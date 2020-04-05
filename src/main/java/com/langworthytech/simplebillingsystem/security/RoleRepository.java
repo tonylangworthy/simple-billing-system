@@ -4,7 +4,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
-public interface CustomUserRepository extends CrudRepository<CustomUser, Long> {
+public interface RoleRepository extends CrudRepository<Role, Long> {
 
-    Optional<CustomUser> findByEmail(String email);
+    Optional<Role> findByName(String name);
 }

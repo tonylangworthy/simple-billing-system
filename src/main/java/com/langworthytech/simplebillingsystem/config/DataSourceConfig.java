@@ -1,4 +1,4 @@
-package com.langworthytech.simplebillingsystem.security;
+package com.langworthytech.simplebillingsystem.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.DataSourceBuilder;
