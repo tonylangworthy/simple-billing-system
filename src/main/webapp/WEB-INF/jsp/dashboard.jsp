@@ -21,7 +21,7 @@
                   <h5 class="card-title">Create an Invoice</h5>
                   <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                   <div class="btn-group mr-2" role="group">
-                      <div class="btn btn-link"><a href="">Create</a></div>
+                      <div class="btn btn-link"><a href="/invoices/create">Create</a></div>
                   </div>
                   <div class="btn-group mr-2" role="group">
                       <div class="btn btn-link"><a href="">View</a></div>
@@ -42,15 +42,15 @@
               </div>
             </div>
             <div class="card border-light mb-3" style="max-width: 18rem;">
-            <div class="card-header">Services</div>
+            <div class="card-header">Products / Services</div>
             <div class="card-body">
               <h5 class="card-title">Light card title</h5>
               <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                   <div class="btn-group mr-2" role="group">
-                      <div class="btn btn-link"><a href="">Create</a></div>
+                      <div class="btn btn-link"><a href="/products/create">Create</a></div>
                   </div>
                   <div class="btn-group mr-2" role="group">
-                      <div class="btn btn-link"><a href="">View</a></div>
+                      <div class="btn btn-link"><a href="/products">View</a></div>
                   </div>
             </div>
           </div>

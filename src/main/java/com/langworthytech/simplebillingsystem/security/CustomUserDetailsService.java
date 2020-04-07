@@ -48,10 +48,12 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new EntityNotFoundException("User role not found!"));
 
         CustomUserDetails userDetails = new CustomUserDetails(
+                user.getId(),
                 user.getFirstName(),
                 user.getLastName(),
                 user.getEmail(),
                 user.getPassword(),
+                user.getAccount(),
                 true,
                 true,
                 true,

@@ -16,14 +16,8 @@
     	<div class="container">
         <div class="register-form mx-auto">
     		<div class="">
-    			<h2>Create Customer</h2>
+    			<h2>Search Customer</h2>
     		</div>
-            <c:if test="${not empty errorMessage}">
-                <div class="alert alert-danger" role="alert">${errorMessage}</div>
-            </c:if>
-            <c:if test="${not empty successMessage}">
-                <div class="alert alert-success" role="alert">${successMessage}</div>
-            </c:if>
             <form:form action="/customers/create" modelAttribute="customer" method="post">
               <div class="form-group">
                 <label for="first-name">first name</label>

@@ -20,10 +20,10 @@ public class CustomerController {
 
     private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
-    private CustomerServiceImpl customerService;
+    private CustomerService customerService;
 
     @Autowired
-    public CustomerController(CustomerServiceImpl customerService) {
+    public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
 
@@ -56,7 +56,8 @@ public class CustomerController {
             return "redirect:/customers/create";
         }
         // Store the customer
-        Customer customer = customerService.createCustomer(formModel);
+        Customer customer = customerService.findOrCreateCustomer(formModel);
+        redirectAttributes.addFlashAttribute("successMessage", "Customer created successfully!");
         return "redirect:/customers/create";
     }
 }

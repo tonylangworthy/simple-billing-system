@@ -1,5 +1,6 @@
 package com.langworthytech.simplebillingsystem.customer;
 
+import com.langworthytech.simplebillingsystem.account.Account;
 import com.langworthytech.simplebillingsystem.security.User;
 import lombok.Data;
 
@@ -41,5 +42,6 @@ public class Customer {
     }
 
     @ManyToOne
-    private User user;
+    @JoinColumn(name = "account_id", nullable = false)
+    private Account account;
 }

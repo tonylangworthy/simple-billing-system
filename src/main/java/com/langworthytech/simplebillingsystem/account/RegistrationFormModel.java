@@ -1,4 +1,4 @@
-package com.langworthytech.simplebillingsystem.security;
+package com.langworthytech.simplebillingsystem.account;
 
 import lombok.Data;
 import org.springframework.stereotype.Component;
