@@ -21,7 +21,7 @@ public class CustomUserDetails extends User {
 
     private String password;
 
-    private Account account;
+    private com.langworthytech.simplebillingsystem.security.User user;
 
     public CustomUserDetails(
             Long id,
@@ -29,7 +29,7 @@ public class CustomUserDetails extends User {
             String lastName,
             String email,
             String password,
-            Account account,
+            com.langworthytech.simplebillingsystem.security.User user,
             Boolean enabled,
             Boolean accountNonExpired,
             Boolean credentialsNonExpired,
@@ -41,7 +41,7 @@ public class CustomUserDetails extends User {
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.account = account;
+        this.user = user;
     }
 
     @Override
@@ -103,12 +103,12 @@ public class CustomUserDetails extends User {
         this.password = password;
     }
 
-    public Account getAccount() {
-        return account;
+    public com.langworthytech.simplebillingsystem.security.User getUser() {
+        return user;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public void setUser(com.langworthytech.simplebillingsystem.security.User user) {
+        this.user = user;
     }
 
     @Override

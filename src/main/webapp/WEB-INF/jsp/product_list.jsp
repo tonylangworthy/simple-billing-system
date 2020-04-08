@@ -12,9 +12,12 @@
     <link type="text/css" href="${jstlCss}" rel="stylesheet" />
     </head>
     <body>
+        <jsp:include page="_navbar.jsp">
+            <jsp:param name="userName" value="${userName}"/>
+        </jsp:include>
 
     	<div class="container">
-        <div class="register-form mx-auto">
+        <div class="list-table mx-auto">
     		<div class="">
     			<h2>Products (${products.size()})</h2>
     		</div>
@@ -22,9 +25,31 @@
                 <c:if test="${products.size() == 0}">
                     <div class="alert alert-info">No products to display. <a href="">Add products here</a>.</div>
                 </c:if>
-                <c:forEach items="${products}" var="p" varStatus="loop">
-                    ${p.name}<br>
-                </c:forEach>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>Product ID</td>
+                            <td>Goods/Service</td>
+                            <td>SKU</td>
+                            <td>Is Service?</td>
+                            <td>Price</td>
+                            <td>Date Added</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach items="${products}" var="p" varStatus="loop">
+                        <tr>
+                            <td>${p.id}</td>
+                            <td>${p.name}</td>
+                            <td>${p.sku}</td>
+                            <td>${p.isService}</td>
+                            <td>${p.price}</td>
+                            <td>${p.slashedCreatedAt}</td>
+                        </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+
             </div>
         </div>
     	</div>

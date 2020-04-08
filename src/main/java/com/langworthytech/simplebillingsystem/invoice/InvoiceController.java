@@ -1,5 +1,6 @@
 package com.langworthytech.simplebillingsystem.invoice;
 
+import com.langworthytech.simplebillingsystem.product.IProductService;
 import com.langworthytech.simplebillingsystem.product.ProductFormModel;
 import com.langworthytech.simplebillingsystem.product.ProductService;
 import org.springframework.stereotype.Controller;
@@ -14,7 +15,7 @@ import java.util.List;
 @RequestMapping("/invoices")
 public class InvoiceController {
 
-    private ProductService productService;
+    private IProductService productService;
 
     public InvoiceController(ProductService productService) {
         this.productService = productService;

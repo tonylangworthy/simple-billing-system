@@ -29,7 +29,7 @@ public class CustomerService implements ICustomerService {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails customUserDetails = (CustomUserDetails) auth.getPrincipal();
-        customer.setAccount(customUserDetails.getAccount());
+        customer.setAccount(customUserDetails.getUser().getAccount());
         return customerRepository.save(customer);
     }
 

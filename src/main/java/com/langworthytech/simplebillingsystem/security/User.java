@@ -7,6 +7,8 @@ import com.langworthytech.simplebillingsystem.product.Product;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -58,8 +60,13 @@ public class User {
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "user")
     private List<Product> products = new ArrayList<>();
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(mappedBy = "user")
+    private List<Invoice> invoices = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "account_id", nullable = false)

@@ -46,11 +46,6 @@ public class Account {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @OneToMany(mappedBy = "account")
-    private List<Invoice> invoices = new ArrayList<>();
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @OneToMany(mappedBy = "account")
     private List<Customer> customers = new ArrayList<>();
 
     @Column(updatable = false)

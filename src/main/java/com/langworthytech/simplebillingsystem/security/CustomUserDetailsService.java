@@ -53,7 +53,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 user.getLastName(),
                 user.getEmail(),
                 user.getPassword(),
-                user.getAccount(),
+                user,
                 true,
                 true,
                 true,

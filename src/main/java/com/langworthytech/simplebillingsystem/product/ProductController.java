@@ -1,5 +1,8 @@
 package com.langworthytech.simplebillingsystem.product;
 
+import com.langworthytech.simplebillingsystem.security.AuthenticationFacade;
+import com.langworthytech.simplebillingsystem.security.CustomUserDetails;
+import com.langworthytech.simplebillingsystem.security.IAuthenticationFacade;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,22 +13,44 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RequestMapping("/products")
 public class ProductController {
 
+    private IAuthenticationFacade authenticationFacade;
+
     private IProductService productService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(AuthenticationFacade authenticationFacade, ProductService productService) {
+        this.authenticationFacade = authenticationFacade;
         this.productService = productService;
     }
 
     @GetMapping("")
     public String showAllProducts(Model model) {
-        Iterable<Product> iterable = productService.findAllProducts();
-        model.addAttribute("products", iterable);
+
+        CustomUserDetails userDetails = (CustomUserDetails) authenticationFacade.getAuthentication().getPrincipal();
+        model.addAttribute("userName", userDetails.getFirstName() + " " + userDetails.getLastName());
+
+        List<ProductFormModel> productList = new ArrayList<>();
+
+        productService.findAllProducts().forEach(product -> {
+
+            productList.add(new ProductFormModel(
+                    product.getId(),
+                    product.getName(),
+                    product.getDescription(),
+                    product.getSku(),
+                    product.isService(),
+                    product.getPrice(),
+                    product.getCreatedAt(),
+                    product.getUpdatedAt()
+            ));
+        });
+        model.addAttribute("products", productList);
         return "product_list";
     }
 

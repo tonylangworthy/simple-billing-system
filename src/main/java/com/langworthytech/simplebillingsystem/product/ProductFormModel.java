@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Component
 public class ProductFormModel {
@@ -18,17 +20,35 @@ public class ProductFormModel {
 
     private String sku;
 
+    private boolean isService;
+
     private double price;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 
     public ProductFormModel() {
 
     }
 
-    public ProductFormModel(String name, String description, String sku, double price) {
+    public ProductFormModel(
+            Long id,
+            String name,
+            String description,
+            String sku,
+            boolean isService,
+            double price,
+            LocalDateTime createAt,
+            LocalDateTime updatedAt) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.sku = sku;
+        this.isService = isService;
         this.price = price;
+        this.createdAt = createAt;
+        this.updatedAt = updatedAt;
     }
 
     public Long getId() {
@@ -63,11 +83,47 @@ public class ProductFormModel {
         this.sku = sku;
     }
 
+    public boolean getIsService() {
+        return isService;
+    }
+
+    public void setIsService(boolean service) {
+        isService = service;
+    }
+
     public double getPrice() {
         return price;
     }
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public void setCreatedAt(LocalDateTime date) {
+        this.createdAt = date;
+    }
+
+    public void setUpdatedAt(LocalDateTime date) {
+        this.updatedAt = date;
+    }
+
+    public String getSlashedCreatedAt() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
+        return formatter.format(this.createdAt);
+    }
+
+    public String getSlashedUpdatedAt() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
+        return formatter.format(this.updatedAt);
+    }
+
+    public String getFriendlyCreatedAt() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        return formatter.format(this.createdAt);
+    }
+
+    public String getFriendlyUpdatedAt() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        return formatter.format(this.updatedAt);
     }
 }

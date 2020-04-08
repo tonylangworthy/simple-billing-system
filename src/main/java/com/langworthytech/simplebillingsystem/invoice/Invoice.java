@@ -1,6 +1,7 @@
 package com.langworthytech.simplebillingsystem.invoice;
 
 import com.langworthytech.simplebillingsystem.account.Account;
+import com.langworthytech.simplebillingsystem.security.User;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -26,8 +27,8 @@ public class Invoice {
     private String notes;
 
     @ManyToOne
-    @JoinColumn(name = "account_id", nullable = false)
-    private Account account;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(updatable = false)
     private Date createdAt;

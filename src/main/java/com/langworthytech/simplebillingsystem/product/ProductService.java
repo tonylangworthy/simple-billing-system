@@ -1,6 +1,11 @@
 package com.langworthytech.simplebillingsystem.product;
 
+import com.langworthytech.simplebillingsystem.security.AuthenticationFacade;
 import com.langworthytech.simplebillingsystem.security.CustomUserDetails;
+import com.langworthytech.simplebillingsystem.security.IAuthenticationFacade;
+import com.langworthytech.simplebillingsystem.security.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,10 +18,15 @@ import java.util.Optional;
 @Service
 public class ProductService implements IProductService {
 
+    private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
+
+    private IAuthenticationFacade authenticationFacade;
+
     private ProductRepository productRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(AuthenticationFacade authenticationFacade, ProductRepository productRepository) {
+        this.authenticationFacade = authenticationFacade;
         this.productRepository = productRepository;
     }
 
@@ -25,15 +35,19 @@ public class ProductService implements IProductService {
     }
 
     public Product createProductFromModel(ProductFormModel productForm) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+
+        logger.info("getAuthentication().getName(): " + authenticationFacade.getAuthentication().getName());
+
+        CustomUserDetails customUserDetails = (CustomUserDetails) authenticationFacade.getAuthentication().getPrincipal();
+
+//        logger.info("user id: " + customUserDetails.g);
 
         Product product = new Product();
         product.setName(productForm.getName());
         product.setDescription(productForm.getDescription());
         product.setPrice(productForm.getPrice());
         product.setSku(generateSku());
-        product.setAccount(userDetails.getAccount());
+        product.setUser(customUserDetails.getUser());
 
         return productRepository.save(product);
     }
@@ -43,10 +57,10 @@ public class ProductService implements IProductService {
     }
 
     public Iterable<Product> findAllProducts() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
 
-        return productRepository.findAllByAccount(userDetails.getAccount());
+        CustomUserDetails userDetails = (CustomUserDetails) authenticationFacade.getAuthentication().getPrincipal();
+
+        return productRepository.findAllByAccount(userDetails.getUser().getAccount());
     }
 
     private String generateSku() {

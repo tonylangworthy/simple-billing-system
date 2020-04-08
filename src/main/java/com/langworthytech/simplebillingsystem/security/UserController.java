@@ -25,17 +25,21 @@ public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
+    private IAuthenticationFacade authenticationFacade;
+
     private UserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(AuthenticationFacade authenticationFacade, UserService userService) {
+
+        this.authenticationFacade = authenticationFacade;
 
         this.userService = userService;
     }
 
     @GetMapping("/dashboard")
-    public String dashboard(ModelMap modelMap, Authentication authentication) {
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+    public String dashboard(ModelMap modelMap) {
+        CustomUserDetails userDetails = (CustomUserDetails) authenticationFacade.getAuthentication().getPrincipal();
         modelMap.put("userName", userDetails.getFirstName() + " " + userDetails.getLastName());
         logger.info("Currently Logged in User: " + userDetails.getFirstName() + " " + userDetails.getLastName());
         return "dashboard";
