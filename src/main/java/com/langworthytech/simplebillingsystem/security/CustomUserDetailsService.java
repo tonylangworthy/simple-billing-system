@@ -44,8 +44,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         User user = optionalCustomUser.orElseThrow(() -> new UsernameNotFoundException(email));
 
-        Role userRole = authorityService.findRoleByName("ROLE_USER")
-                .orElseThrow(() -> new EntityNotFoundException("User role not found!"));
+//        Role userRole = authorityService.findRoleByName("USER")
+//                .orElseThrow(() -> new EntityNotFoundException("User role not found!"));
 
         CustomUserDetails userDetails = new CustomUserDetails(
                 user.getId(),
@@ -66,31 +66,14 @@ public class CustomUserDetailsService implements UserDetailsService {
     private static Collection<? extends  GrantedAuthority> getAuthorities(User user) {
         logger.info("getAuthorities for user email: " + user.getEmail());
 
+        // new
         Collection<Role> roles = user.getRoles();
-        List<String> privileges = getPrivileges(roles);
-        List<GrantedAuthority> grantedAuthorities = getGrantedAuthorities(privileges);
-        return grantedAuthorities;
-
-
-//        String[] userRoles = user.getRoles().stream().map(authority -> authority.getPrivileges()).toArray(String[]::new);
-//        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(userRoles);
-//        return authorities;
-    }
-
-    private static List<String> getPrivileges(Collection<Role> roles) {
-        List<String> privileges = new ArrayList<>();
-        roles.forEach(role -> {
-            role.getPrivileges().forEach(privilege -> {
-                privileges.add(privilege.getName());
-            });
-        });
-        return privileges;
-    }
-
-    private static List<GrantedAuthority> getGrantedAuthorities(List<String> privileges) {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        privileges.forEach(privilege -> {
-            authorities.add(new SimpleGrantedAuthority(privilege));
+        roles.forEach(role -> {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+            role.getPrivileges().stream().map(privilege -> {
+                return new SimpleGrantedAuthority(privilege.getName());
+            }).forEach(authorities::add);
         });
         return authorities;
     }
