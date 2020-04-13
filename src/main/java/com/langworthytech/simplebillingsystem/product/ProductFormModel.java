@@ -22,8 +22,6 @@ public class ProductFormModel {
 
     private boolean isService;
 
-    private double price;
-
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
@@ -38,7 +36,6 @@ public class ProductFormModel {
             String description,
             String sku,
             boolean isService,
-            double price,
             LocalDateTime createAt,
             LocalDateTime updatedAt) {
         this.id = id;
@@ -46,7 +43,6 @@ public class ProductFormModel {
         this.description = description;
         this.sku = sku;
         this.isService = isService;
-        this.price = price;
         this.createdAt = createAt;
         this.updatedAt = updatedAt;
     }
@@ -91,14 +87,6 @@ public class ProductFormModel {
         isService = service;
     }
 
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
     public void setCreatedAt(LocalDateTime date) {
         this.createdAt = date;
     }
@@ -113,12 +101,12 @@ public class ProductFormModel {
     }
 
     public String getSlashedUpdatedAt() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         return formatter.format(this.updatedAt);
     }
 
     public String getFriendlyCreatedAt() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
         return formatter.format(this.createdAt);
     }
 

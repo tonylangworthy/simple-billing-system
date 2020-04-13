@@ -2,8 +2,8 @@ package com.langworthytech.simplebillingsystem.security;
 
 import com.langworthytech.simplebillingsystem.account.Account;
 import com.langworthytech.simplebillingsystem.account.AccountRepository;
-import com.langworthytech.simplebillingsystem.account.RegistrationFormModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,16 +36,21 @@ public class UserService {
     }
 
     @Transactional
-    public User registerNewUser(RegistrationFormModel registrationModel) throws EmailExistsException, RoleNotFoundException {
+    public User createUser(UserFormModel userModel) throws EmailExistsException, RoleNotFoundException {
 
-        if(emailExists(registrationModel.getEmail())) {
-            throw new EmailExistsException("There is already an account using that email address: " + registrationModel.getEmail());
+        if(emailExists(userModel.getEmail())) {
+            throw new EmailExistsException("There is already an account using that email address: " + userModel.getEmail());
         }
 
-        String encodedPassword = passwordEncoder.encode(registrationModel.getConfirmPassword());
+        String encodedPassword = passwordEncoder.encode(userModel.getConfirmPassword());
+        String userRole = "ROLE_USER";
+
+        if(userModel.getAdmin()) {
+            userRole = "ROLE_ADMIN";
+        }
 
         Account account = new Account();
-        account.setEmail(registrationModel.getEmail());
+        account.setEmail(userModel.getEmail());
         account.setActive(true);
         accountRepository.save(account);
 
@@ -53,10 +58,10 @@ public class UserService {
         User user = new User();
         user.setEnabled(Boolean.TRUE);
         user.setPassword(encodedPassword);
-        user.setEmail(registrationModel.getEmail());
-        user.setFirstName(registrationModel.getFirstName());
-        user.setLastName(registrationModel.getLastName());
-        user.setRoles(Arrays.asList(authorityService.findRoleByName("ROLE_ADMIN")
+        user.setEmail(userModel.getEmail());
+        user.setFirstName(userModel.getFirstName());
+        user.setLastName(userModel.getLastName());
+        user.setRoles(Arrays.asList(authorityService.findRoleByName(userRole)
                 .orElseThrow(() -> new RoleNotFoundException("This role does not exist!"))));
         user.setAccount(account);
         account.getUsers().add(user);

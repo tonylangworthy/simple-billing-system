@@ -1,6 +1,7 @@
 package com.langworthytech.simplebillingsystem.security;
 
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.Collection;

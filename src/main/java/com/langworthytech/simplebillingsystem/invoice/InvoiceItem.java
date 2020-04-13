@@ -4,6 +4,8 @@ import com.langworthytech.simplebillingsystem.product.Product;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @Entity
@@ -16,11 +18,15 @@ public class InvoiceItem {
 
     private int quantity;
 
+    // unit_amount * quantity
+    @Column(nullable = false)
+    private BigDecimal amount;
+
     @OneToOne
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @ManyToOne()
-    @JoinColumn(name = "invoice_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "invoice_id")
     private Invoice invoice;
 }

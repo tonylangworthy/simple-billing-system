@@ -6,10 +6,7 @@ import com.langworthytech.simplebillingsystem.security.IAuthenticationFacade;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -45,7 +42,6 @@ public class ProductController {
                     product.getDescription(),
                     product.getSku(),
                     product.isService(),
-                    product.getPrice(),
                     product.getCreatedAt(),
                     product.getUpdatedAt()
             ));
@@ -60,7 +56,7 @@ public class ProductController {
         return "product_create";
     }
 
-    @PostMapping("/create")
+    @PostMapping("")
     public String createProduct(
             @Valid
             @ModelAttribute("product") ProductFormModel formModel,
@@ -74,5 +70,21 @@ public class ProductController {
 
 
         return "redirect:/products/create";
+    }
+
+    @GetMapping("/autocomplete/{term}")
+    public @ResponseBody List<ProductDto> searchProductByNameStartsWith(@PathVariable String term) {
+        List<ProductDto> productList = new ArrayList<>();
+
+        productService.searchProductsStartsWith(term).forEach(product -> {
+            productList.add(new ProductDto(
+                    product.getId(),
+                    product.getName(),
+                    product.getDescription(),
+                    product.getSku(),
+                    product.isService()
+            ));
+        });
+        return productList;
     }
 }

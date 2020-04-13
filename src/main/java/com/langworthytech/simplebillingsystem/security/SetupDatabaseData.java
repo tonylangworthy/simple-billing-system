@@ -3,6 +3,7 @@ package com.langworthytech.simplebillingsystem.security;
 import com.langworthytech.simplebillingsystem.account.Account;
 import com.langworthytech.simplebillingsystem.account.AccountRepository;
 import com.langworthytech.simplebillingsystem.account.AccountService;
+import com.langworthytech.simplebillingsystem.invoice.InvoiceStatus;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class SetupUserRoles implements ApplicationListener<ContextRefreshedEvent> {
+public class SetupDatabaseData implements ApplicationListener<ContextRefreshedEvent> {
 
     boolean alreadySetup = false;
 
@@ -28,7 +29,7 @@ public class SetupUserRoles implements ApplicationListener<ContextRefreshedEvent
 
     private AuthorityService authorityService;
 
-    public SetupUserRoles(
+    public SetupDatabaseData(
             AuthorityService authorityService,
             AccountService accountService,
             UserService userService,
@@ -52,10 +53,12 @@ public class SetupUserRoles implements ApplicationListener<ContextRefreshedEvent
         // Create the privileges
         Privilege readPrivilege = authorityService.findOrCreatePrivilege("READ_PRIVILEGE");
         Privilege writePrivilege = authorityService.findOrCreatePrivilege("WRITE_PRIVILEGE");
+        Privilege updatePrivilege = authorityService.findOrCreatePrivilege("UPDATE_PRIVILEGE");
+        Privilege deletePrivilege = authorityService.findOrCreatePrivilege("DELETE_PRIVILEGE");
 
         // Add all privileges to the admin role
         List<Privilege> adminPrivileges = Arrays.asList(
-                readPrivilege, writePrivilege
+                readPrivilege, writePrivilege, updatePrivilege, deletePrivilege
         );
         // Create the roles and assign privileges to each role
         Role adminRole = authorityService.findOrCreateRole("ROLE_ADMIN", adminPrivileges);
@@ -72,7 +75,7 @@ public class SetupUserRoles implements ApplicationListener<ContextRefreshedEvent
             newAccount.setState("MO");
             newAccount.setZip("65111");
             newAccount.setPhone("555-555-5555");
-            newAccount.setWebsite("https://langworthytech.com");
+            newAccount.setWebsite("langworthytech.com");
             newAccount.setActive(true);
             accountService.createAccount(newAccount);
 
@@ -87,9 +90,6 @@ public class SetupUserRoles implements ApplicationListener<ContextRefreshedEvent
             newAccount.getUsers().add(user);
             userService.createUser(user);
         }
-
-
-
         alreadySetup = true;
     }
 

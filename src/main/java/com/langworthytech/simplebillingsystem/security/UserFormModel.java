@@ -1,4 +1,4 @@
-package com.langworthytech.simplebillingsystem.account;
+package com.langworthytech.simplebillingsystem.security;
 
 import lombok.Data;
 import org.springframework.stereotype.Component;
@@ -7,7 +7,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.constraints.*;
 
 @Component
-public class RegistrationFormModel {
+public class UserFormModel {
 
     @NotEmpty
     @Size(max = 20, message = "First name cannot be greater than 20 characters.")
@@ -28,6 +28,8 @@ public class RegistrationFormModel {
     @NotEmpty
     @Size(min = 8, message = "Password must be at least 8 characters.")
     private String confirmPassword;
+
+    private boolean admin = false;
 
 //    private boolean isPasswordMatch;
 
@@ -69,6 +71,14 @@ public class RegistrationFormModel {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+
+    public boolean getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 
     @AssertTrue(message = "Passwords do not match. Please try again.")

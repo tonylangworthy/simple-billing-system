@@ -1,5 +1,7 @@
 package com.langworthytech.simplebillingsystem.customer;
 
+import com.langworthytech.simplebillingsystem.customer.dto.CustomerResponse;
+import com.langworthytech.simplebillingsystem.customer.dto.CustomerFormRequest;
 import com.langworthytech.simplebillingsystem.util.ValidationError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/customers")
@@ -29,14 +33,14 @@ public class CustomerController {
 
     @RequestMapping(value = "/create", method = RequestMethod.GET)
     public String showCreateForm(Model model) {
-        model.addAttribute("customer", new CustomerFormModel());
+        model.addAttribute("customer", new CustomerFormRequest());
         return "create_customer";
     }
 
-    @PostMapping("/create")
-    public String create(
+    @PostMapping("")
+    public @ResponseBody CustomerResponse create(
             @Valid
-            @ModelAttribute("customer") CustomerFormModel formModel,
+            @ModelAttribute("customer") CustomerFormRequest formModel,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes,
             ModelMap model
@@ -53,11 +57,36 @@ public class CustomerController {
                 redirectAttributes.addFlashAttribute(regError.getFieldName(), regError);
 
             });
-            return "redirect:/customers/create";
+            return new CustomerResponse();
         }
         // Store the customer
         Customer customer = customerService.findOrCreateCustomer(formModel);
-        redirectAttributes.addFlashAttribute("successMessage", "Customer created successfully!");
-        return "redirect:/customers/create";
+        CustomerResponse customerResponse = new CustomerResponse();
+        customerResponse.setId(customer.getId());
+        customerResponse.setFirstName(customer.getFirstName());
+        customerResponse.setLastName(customer.getLastName());
+        customerResponse.setEmail(customer.getEmail());
+        customerResponse.setPhone(customer.getPhone());
+        customerResponse.setCompanyName(customer.getCompanyName());
+
+        return customerResponse;
     }
+
+    @GetMapping("/autocomplete/{term}")
+    public @ResponseBody
+    List<CustomerResponse> searchCustomerByEmailStartsWith(@PathVariable String term) {
+        List<CustomerResponse> customers = new ArrayList<>();
+        customerService.searchByEmailStartsWith(term).forEach(customer -> {
+            customers.add(new CustomerResponse(
+                    customer.getId(),
+                    customer.getFirstName(),
+                    customer.getLastName(),
+                    customer.getEmail(),
+                    customer.getPhone(),
+                    customer.getCompanyName()
+            ));
+        });
+        return customers;
+    }
+
 }

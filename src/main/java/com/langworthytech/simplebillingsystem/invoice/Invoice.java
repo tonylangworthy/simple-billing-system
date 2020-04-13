@@ -1,6 +1,7 @@
 package com.langworthytech.simplebillingsystem.invoice;
 
 import com.langworthytech.simplebillingsystem.account.Account;
+import com.langworthytech.simplebillingsystem.customer.Customer;
 import com.langworthytech.simplebillingsystem.security.User;
 import lombok.Data;
 
@@ -18,10 +19,18 @@ public class Invoice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String invoiceNum;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private int invoiceNum;
+
+    @Column(length = 50)
+    private String name;
 
     @OneToMany(mappedBy = "invoice")
     private Set<InvoiceItem> invoiceItems = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "invoice_status_id", nullable = false)
+    private InvoiceStatus invoiceStatus;
 
     @Lob
     private String notes;
@@ -29,6 +38,10 @@ public class Invoice {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
 
     @Column(updatable = false)
     private Date createdAt;
@@ -45,4 +58,8 @@ public class Invoice {
         this.updatedAt = new Date();
     }
 
+    public Invoice(String name, InvoiceStatus invoiceStatus) {
+        this.name = name;
+        this.invoiceStatus = invoiceStatus;
+    }
 }

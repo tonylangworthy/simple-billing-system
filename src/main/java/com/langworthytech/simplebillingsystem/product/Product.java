@@ -1,6 +1,7 @@
 package com.langworthytech.simplebillingsystem.product;
 
 import com.langworthytech.simplebillingsystem.account.Account;
+import com.langworthytech.simplebillingsystem.billing.Plan;
 import com.langworthytech.simplebillingsystem.invoice.InvoiceItem;
 import com.langworthytech.simplebillingsystem.security.User;
 import lombok.Data;
@@ -9,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Set;
 
 @Data
 @Entity
@@ -27,9 +29,6 @@ public class Product {
 
     @Column(length = 20, nullable = false)
     private String sku;
-
-    @Column(nullable = false)
-    private double price;
 
     @Column(nullable = false)
     private boolean isService;
@@ -55,4 +54,19 @@ public class Product {
 
     @OneToOne(mappedBy = "product")
     private InvoiceItem invoiceItem;
+
+    @ManyToMany
+    @JoinTable(
+            name = "products_plans",
+            joinColumns = {@JoinColumn(name = "product_id")},
+            inverseJoinColumns = {@JoinColumn(name = "plan_id")}
+    )
+    private Set<Plan> plans;
+
+    public Product() {}
+
+    public Product(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 }

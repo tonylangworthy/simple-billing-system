@@ -18,24 +18,20 @@
     	<div class="container">
         <div class="register-form mx-auto">
     		<div class="">
-    			<h2>Add Product / Service</h2>
+    			<h2>Add Interval</h2>
     		</div>
-            <form:form action="/products" modelAttribute="product" method="post">
+            <form:form action="/billing/intervals" modelAttribute="interval" method="post">
               <div class="form-group">
                 <label for="product-name">name</label>
-                <form:input path="name" class="form-control ${name.hasErrors ? 'is-invalid':''}" id="product-name" aria-describedby="product-name-help" placeholder="Product or Service"/>
+                <form:input path="intervalName" class="form-control ${name.hasErrors ? 'is-invalid':''}" id="product-name" aria-describedby="product-name-help" placeholder="Product or Service"/>
                 <div class="invalid-feedback">${name.hasErrors ? name.errorMessage:''}</div>
                 <small id="product-name-help" class="form-text text-muted">The name of your product of service (100 chars max)</small>
               </div>
               <div class="form-group">
                 <label for="product-description">description</label>
-                <form:textarea path="description" class="form-control ${description.hasErrors ? 'is-invalid':''}" id="product-description" aria-describedby="description-help" placeholder="Product description"/>
+                <form:textarea path="intervalCount" class="form-control ${description.hasErrors ? 'is-invalid':''}" id="product-description" aria-describedby="description-help" placeholder="Product description"/>
                 <div class="invalid-feedback">${description.hasErrors ? description.errorMessage:''}</div>
                 <small id="last-name-help" class="form-text text-muted">Describe the product or service</small>
-              </div>
-              <div class="custom-control custom-checkbox mb-2">
-                <input type="checkbox" class="custom-control-input" id="customCheck1">
-                <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>
               </div>
               <button type="submit" class="btn btn-primary">Save</button>
             </form:form>

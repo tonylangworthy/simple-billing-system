@@ -8,13 +8,26 @@
   <div class="collapse navbar-collapse pull-right" id="navbarNavDropdown">
     <ul class="navbar-nav">
       <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="">Dashboard <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="billing-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Billing
+        </a>
+        <div class="dropdown-menu" aria-labelledby="billing-dropdown">
+          <a class="dropdown-item" href="/invoices/create">Create Invoice</a>
+          <a class="dropdown-item" href="">Create Subscription</a>
+          <a class="dropdown-item" href="">Invoices</a>
+          <a class="dropdown-item" href="">Payments</a>
+        </div>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Features</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Pricing</a>
+        <a class="nav-link dropdown-toggle" href="#" id="manage-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Manage
+        </a>
+        <div class="dropdown-menu" aria-labelledby="manage-dropdown">
+          <a class="dropdown-item" href="">Logout</a>
+        </div>
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

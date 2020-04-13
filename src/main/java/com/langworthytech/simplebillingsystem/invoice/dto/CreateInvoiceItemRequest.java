@@ -1,44 +1,31 @@
-package com.langworthytech.simplebillingsystem.invoice;
+package com.langworthytech.simplebillingsystem.invoice.dto;
 
-import com.langworthytech.simplebillingsystem.product.Product;
-import com.langworthytech.simplebillingsystem.product.ProductFormModel;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Component
-public class InvoiceItemFormModel {
+public class CreateInvoiceItemRequest implements Serializable {
 
-    private Long invoiceItemId;
+    private Long invoiceId;
 
     private Long productId;
-
-    private Long customerId;
 
     private String productName;
 
     private String productDescription;
 
-    private String productSku;
-
-    private int quantity = 1;
+    private int quantity;
 
     private BigDecimal unitPrice;
 
-    public InvoiceItemFormModel() {}
-
-    public InvoiceItemFormModel(Long id, String productName, String productDescription, String productSku) {
-        this.productName = productName;
-        this.productDescription = productDescription;
-        this.productSku = productSku;
+    public Long getInvoiceId() {
+        return invoiceId;
     }
 
-    public Long getInvoiceItemId() {
-        return invoiceItemId;
-    }
-
-    public void setInvoiceItemId(Long invoiceItemId) {
-        this.invoiceItemId = invoiceItemId;
+    public void setInvoiceId(Long invoiceId) {
+        this.invoiceId = invoiceId;
     }
 
     public Long getProductId() {
@@ -47,14 +34,6 @@ public class InvoiceItemFormModel {
 
     public void setProductId(Long productId) {
         this.productId = productId;
-    }
-
-    public Long getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
     }
 
     public String getProductName() {
@@ -71,14 +50,6 @@ public class InvoiceItemFormModel {
 
     public void setProductDescription(String productDescription) {
         this.productDescription = productDescription;
-    }
-
-    public String getProductSku() {
-        return productSku;
-    }
-
-    public void setProductSku(String productSku) {
-        this.productSku = productSku;
     }
 
     public int getQuantity() {
@@ -99,13 +70,11 @@ public class InvoiceItemFormModel {
 
     @Override
     public String toString() {
-        return "InvoiceItemFormModel{" +
-                "invoiceItemId=" + invoiceItemId +
+        return "CreateInvoiceItemRequest{" +
+                "invoiceId=" + invoiceId +
                 ", productId=" + productId +
-                ", customerId=" + customerId +
                 ", productName='" + productName + '\'' +
                 ", productDescription='" + productDescription + '\'' +
-                ", productSku='" + productSku + '\'' +
                 ", quantity=" + quantity +
                 ", unitPrice=" + unitPrice +
                 '}';

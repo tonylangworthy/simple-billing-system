@@ -1,5 +1,6 @@
 package com.langworthytech.simplebillingsystem.customer;
 
+import com.langworthytech.simplebillingsystem.customer.dto.CustomerFormRequest;
 import com.langworthytech.simplebillingsystem.security.CustomUserDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +26,15 @@ public class CustomerService implements ICustomerService {
     }
 
 
+    @Override
+    public List<Customer> findAllCustomers() {
+        return customerRepository.findAll();
+    }
+
+    @Override
+    public List<Customer> searchByEmailStartsWith(String term) {
+        return customerRepository.findByEmailStartsWith(term);
+    }
 
     @Override
     public Customer createCustomer(Customer customer) {
@@ -34,7 +46,7 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public Customer findOrCreateCustomer(CustomerFormModel customerModel) {
+    public Customer findOrCreateCustomer(CustomerFormRequest customerModel) {
         Optional<Customer> optionalCustomer = findCustomerByEmailAndPhone(customerModel.getEmail(), customerModel.getPhone());
         return optionalCustomer.orElseGet(() -> {
             Customer customer = new Customer();
@@ -57,6 +69,12 @@ public class CustomerService implements ICustomerService {
     @Override
     public Optional<Customer> findCustomerByEmail(String email) {
         return customerRepository.findByEmail(email);
+    }
+
+    @Override
+    public Customer findCustomerById(Long id) throws EntityNotFoundException {
+        Optional<Customer> optionalCustomer = customerRepository.findById(id);
+        return optionalCustomer.orElseThrow(() -> new EntityNotFoundException("Customer does not exist!"));
     }
 
     @Override

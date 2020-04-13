@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -34,30 +35,42 @@ public class ProductService implements IProductService {
         return null;
     }
 
+    @Override
+    public Optional<Product> findProductById(Long id) {
+        return productRepository.findById(id);
+    }
+
+
+    @Override
+    public List<Product> searchProductsStartsWith(String searchTerm) {
+        return productRepository.findByNameStartsWith(searchTerm);
+    }
+
     public Product createProductFromModel(ProductFormModel productForm) {
 
         logger.info("getAuthentication().getName(): " + authenticationFacade.getAuthentication().getName());
 
         CustomUserDetails customUserDetails = (CustomUserDetails) authenticationFacade.getAuthentication().getPrincipal();
 
-//        logger.info("user id: " + customUserDetails.g);
-
         Product product = new Product();
         product.setName(productForm.getName());
         product.setDescription(productForm.getDescription());
-        product.setPrice(productForm.getPrice());
         product.setSku(generateSku());
+        product.setService(product.isService());
         product.setUser(customUserDetails.getUser());
 
         return productRepository.save(product);
     }
 
     public Product createProduct(Product product) {
+        CustomUserDetails userDetails = (CustomUserDetails) authenticationFacade.getAuthentication().getPrincipal();
+
+        product.setUser(userDetails.getUser());
+        product.setSku(generateSku());
         return productRepository.save(product);
     }
 
     public Iterable<Product> findAllProducts() {
-
         CustomUserDetails userDetails = (CustomUserDetails) authenticationFacade.getAuthentication().getPrincipal();
 
         return productRepository.findAllByAccount(userDetails.getUser().getAccount());

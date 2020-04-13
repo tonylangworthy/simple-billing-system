@@ -1,4 +1,4 @@
-package com.langworthytech.simplebillingsystem.customer;
+package com.langworthytech.simplebillingsystem.customer.dto;
 
 import org.springframework.stereotype.Component;
 
@@ -6,7 +6,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 @Component
-public class CustomerFormModel {
+public class CustomerFormRequest {
 
     @NotEmpty
     @Size(max = 20, message = "First name cannot be greater than 20 characters.")
