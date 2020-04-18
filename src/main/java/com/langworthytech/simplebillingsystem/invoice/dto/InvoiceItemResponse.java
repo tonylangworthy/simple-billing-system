@@ -8,45 +8,17 @@ import java.math.BigDecimal;
 @Component
 public class InvoiceItemResponse implements Serializable {
 
-    private Long invoiceId;
-
-    private String invoiceName;
-
-    private String invoiceStatus;
-
     private String productName;
 
     private String productDescription;
+
+    private Long invoiceItemId;
 
     private int quantity;
 
     private BigDecimal unitPrice;
 
     private BigDecimal amount;
-
-    public Long getInvoiceId() {
-        return invoiceId;
-    }
-
-    public void setInvoiceId(Long invoiceId) {
-        this.invoiceId = invoiceId;
-    }
-
-    public String getInvoiceName() {
-        return invoiceName;
-    }
-
-    public void setInvoiceName(String invoiceName) {
-        this.invoiceName = invoiceName;
-    }
-
-    public String getInvoiceStatus() {
-        return invoiceStatus;
-    }
-
-    public void setInvoiceStatus(String invoiceStatus) {
-        this.invoiceStatus = invoiceStatus;
-    }
 
     public String getProductName() {
         return productName;
@@ -62,6 +34,14 @@ public class InvoiceItemResponse implements Serializable {
 
     public void setProductDescription(String productDescription) {
         this.productDescription = productDescription;
+    }
+
+    public Long getInvoiceItemId() {
+        return invoiceItemId;
+    }
+
+    public void setInvoiceItemId(Long invoiceItemId) {
+        this.invoiceItemId = invoiceItemId;
     }
 
     public int getQuantity() {

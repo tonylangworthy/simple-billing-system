@@ -112,9 +112,7 @@ public class UserController {
             @Valid
             @ModelAttribute("registration") UserFormModel userFormModel,
             BindingResult bindingResult,
-            RedirectAttributes redirectAttributes,
-            ModelMap model,
-            HttpServletRequest request
+            RedirectAttributes redirectAttributes
             ) {
         if(bindingResult.hasErrors()) {
 

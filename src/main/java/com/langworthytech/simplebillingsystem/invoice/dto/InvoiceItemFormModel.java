@@ -6,9 +6,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Component
-public class CreateInvoiceItemRequest implements Serializable {
-
-    private Long invoiceId;
+public class InvoiceItemFormModel implements Serializable {
 
     private Long productId;
 
@@ -16,17 +14,9 @@ public class CreateInvoiceItemRequest implements Serializable {
 
     private String productDescription;
 
-    private int quantity;
+    private int itemQuantity;
 
     private BigDecimal unitPrice;
-
-    public Long getInvoiceId() {
-        return invoiceId;
-    }
-
-    public void setInvoiceId(Long invoiceId) {
-        this.invoiceId = invoiceId;
-    }
 
     public Long getProductId() {
         return productId;
@@ -52,12 +42,12 @@ public class CreateInvoiceItemRequest implements Serializable {
         this.productDescription = productDescription;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getItemQuantity() {
+        return itemQuantity;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setItemQuantity(int itemQuantity) {
+        this.itemQuantity = itemQuantity;
     }
 
     public BigDecimal getUnitPrice() {
@@ -70,12 +60,11 @@ public class CreateInvoiceItemRequest implements Serializable {
 
     @Override
     public String toString() {
-        return "CreateInvoiceItemRequest{" +
-                "invoiceId=" + invoiceId +
-                ", productId=" + productId +
+        return "InvoiceItemFormModel{" +
+                "productId=" + productId +
                 ", productName='" + productName + '\'' +
                 ", productDescription='" + productDescription + '\'' +
-                ", quantity=" + quantity +
+                ", itemQuantity=" + itemQuantity +
                 ", unitPrice=" + unitPrice +
                 '}';
     }

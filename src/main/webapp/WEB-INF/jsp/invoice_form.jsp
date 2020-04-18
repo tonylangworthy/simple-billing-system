@@ -74,7 +74,8 @@
     		<div class="card">
     		    <div class="card-header">Create Invoice</div>
     		    <div class="card-body">
-                <form:form action="/invoices/create" modelAttribute="invoice" method="post">
+                <form action="/invoices" method="post" autocomplete="off">
+                    <input type="hidden" name="customerId" id="customer-id-input" value="" />
     		        <div class="row">
     		            <div class="col-md">
                             <div>
@@ -136,22 +137,20 @@
     		        <div class="row" id="line-item-form-row">
                         <div class="col-md">
                           <div class="form-row mb-2">
-                          <form id="line-item-form">
                             <div class="col-9">
                                 <input name="lineItemName" type="text" class="form-control" id="product-name-input" autocomplete="off" spellcheck="false" placeholder="Product or service">
                             </div>
                             <div class="col-1">
-                                <input name="lineItemQty" type="text" class="form-control" placeholder="Qty">
+                                <input name="lineItemQty" type="text" class="form-control" id="item-quantity-input" placeholder="Qty">
                             </div>
                             <div class="col-2">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                       <div class="input-group-text">$</div>
                                     </div>
-                                    <input name="lineItemAmount" type="text" class="form-control" placeholder="Unit price">
+                                    <input name="lineItemUnitPrice" type="text" class="form-control" id="item-unit-price-input" placeholder="Unit price">
                                 </div>
                             </div>
-                            </form>
                           </div>
                          <div class="row">
                               <div class="col-md-12">
@@ -159,7 +158,7 @@
                               </div>
                           </div>
 
-                          <button type="button" class="btn btn-link" id="add-item-row-btn">+ Add Item</button>
+                          <button type="button" class="btn btn-light mt-2" id="add-item-row-btn">Save to Invoice</button>
                         </div>
                     </div>
                     <div class="row">
@@ -202,8 +201,8 @@
                         </div>
                     </div>
                     <hr>
-                    <button type="button" class="btn btn-primary float-right">Finalize Invoice</button>
-                </form:form>
+                    <button type="button" class="btn btn-primary float-right" id="finalize-btn">Finalize Invoice</button>
+                </form>
 
     		    </div>
     		</div>
@@ -231,7 +230,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary" id="customer-save-btn">Save changes</button>
+                <button type="button" class="btn btn-primary" id="customer-save-btn">Save changes</button>
               </div>
             </div>
             </form>
@@ -241,9 +240,131 @@
     	<script type="text/javascript" src="${pageContext.request.contextPath}/webjars/typeahead.js/0.11.1/dist/typeahead.bundle.min.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
         <script type="text/javascript">
+
+    class Invoice {
+
+        constructor() {}
+
+        invoice = {
+            customerId: "",
+            invoiceItems: []
+        };
+
+        invoiceItem = {
+            productId: "",
+            productName: "",
+            productDescription: "",
+            itemQuantity: "",
+            unitPrice: ""
+        };
+
+        createLineItemObject() {
+
+            this.invoiceItem.productName = $('#product-name-input').val()
+            this.invoiceItem.productDescription = $('#description-input').val()
+            this.invoiceItem.itemQuantity = $('#item-quantity-input').val()
+            this.invoiceItem.unitPrice = $('#item-unit-price-input').val()
+
+            this.invoice.invoiceItems.push(this.invoiceItem);
+
+            console.log('Created line item object!!');
+            console.log(this.invoice);
+
+        } // end createLineItemObject method
+
+        displayLineItem() {
+            $(this.appendSavedLineItem()).insertBefore('#line-item-form-row');
+
+           $('#product-name-input').val('')
+           $('#description-input').val('')
+           $('#item-quantity-input').val('')
+           $('#item-unit-price-input').val('')
+
+            //this.invoiceItem.productId = null;
+            //this.invoiceItem.productName = null;
+            //this.invoiceItem.productDescription = null;
+            //this.invoiceItem.itemQuantity = null;
+            //this.invoiceItem.unitPrice = null;
+
+        } // end displayLineItem method
+
+        saveInvoice() {
+            console.info('Saving invoice: ' + JSON.stringify(this.invoice));
+           let jqxhr = $.ajax({
+               url: "/invoices",
+               method: "post",
+               contentType: "application/json",
+               data: JSON.stringify(this.invoice)
+           })
+           .done(function(data) {
+
+             console.log(data);
+
+           })
+           .fail(function() {
+             console.log( "error" );
+           })
+           .always(function() {
+             console.log( "complete" );
+
+           });
+
+        } // end saveInvoice method
+
+        appendSavedLineItem() {
+            let lineItem = '<div class="row saved-line-item">'
+               + '<div class="col-md-9">'
+                    + '<div class="pb-2">'
+                        + '<strong>'+this.invoiceItem.productName+'</strong>'
+                    + '</div>'
+                + '</div>'
+                + '<div class="col-md-1">'
+                    + '<div class="pb-2">'+this.invoiceItem.itemQuantity+'</div>'
+                + '</div>'
+                + '<div class="col-md-2">'
+                    + '<div class="pb-2">'+this.invoiceItem.unitPrice+'</div>'
+                + '</div>'
+            + '</div>'
+            + '<div class="row">'
+                   + '<div class="col-md">'
+                       + '<small class="text-muted">'+this.invoiceItem.productDescription+'</small>'
+                   + '</div>'
+               + '</div>'
+            + '<div class="row">'
+                   + '<div class="col-md">'
+                       + '<div class="item-separator pt-1 mb-2"></div>'
+                   + '</div>'
+               + '</div>'
+            return lineItem;
+        } // end addSavedLineItem method
+
+        set customerId(id) {
+            this.invoice.customerId = id;
+        }
+
+        set productId(id) {
+            this.invoiceItem.productId = id;
+        }
+
+        set invoiceItem(item) {
+            this.invoice.invoiceItems.push(item);
+        }
+
+    } // end Invoice class
+
+    const invoice = new Invoice();
+
+
+
+
+
+
+
+
         $(document).ready(function(){
             let customerId;
             let productId;
+            let invoiceItems = [];
 
             let customers = new Bloodhound({
               datumTokenizer: Bloodhound.tokenizers.whitespace,
@@ -287,58 +408,39 @@
                 + customer.email + "<br>"
                 + customer.phone;
 
-                document.getElementById('customer-id').value = customer.id;
+                invoice.customerId = customer.id;
+                document.getElementById('customer-id-input').value = customer.id;
             });
 
             $('#product-name-input').bind('typeahead:select', function(e, product) {
                 console.log(product);
                 $('#description-input').val(product.description);
-                productId = product.id;
+                invoice.productId = product.id;
                 console.log('productId: ' + productId);
 
             });
 
             $('#customer-save-btn').on('click', function(e) {
                 console.log('button clicked!');
-                $('#customer-form').on('submit', function(e) {
+                $('#customer-form').on('click', function(e) {
                     e.preventDefault();
                     saveCustomer()
+                    $('#customer-form-modal').modal('hide');
+
                 });
             });
 
             $('#add-item-row-btn').on('click', function(e) {
 
-                saveLineItem();
+                invoice.createLineItemObject();
 
-                $(addSavedLineItem()).insertBefore('#line-item-form-row');
+                invoice.displayLineItem();
             });
 
-            function addSavedLineItem() {
-                let lineItem = '<div class="row saved-line-item">'
-                   + '<div class="col-md-9">'
-                        + '<div class="pb-2">'
-                            + '<strong>[item name]</strong>'
-                        + '</div>'
-                    + '</div>'
-                    + '<div class="col-md-1">'
-                        + '<div class="pb-2">[qty]</div>'
-                    + '</div>'
-                    + '<div class="col-md-2">'
-                        + '<div class="pb-2">[unit price]</div>'
-                    + '</div>'
-                + '</div>'
-                + '<div class="row">'
-                       + '<div class="col-md">'
-                           + '<small class="text-muted">[desc]</small>'
-                       + '</div>'
-                   + '</div>'
-                + '<div class="row">'
-                       + '<div class="col-md">'
-                           + '<div class="item-separator pt-1 mb-2"></div>'
-                       + '</div>'
-                   + '</div>'
-                return lineItem;
-            }
+            $('#finalize-btn').on('click', function(e) {
+
+                invoice.saveInvoice();
+            });
 
             function saveCustomer() {
 
@@ -364,13 +466,13 @@
                    .done(function(data) {
                      console.log( "success" );
                      console.log(data);
-                     customerId = data.id;
+                     invoice.customerId = data.id;
                    })
                    .fail(function() {
                      console.log( "error" );
                    })
                    .always(function() {
-                     console.log( "complete" );
+                        console.log("always");
                    });
 
                  // Perform other work here ...
@@ -381,42 +483,8 @@
                  });
             }
 
-            function saveLineItem() {
-
-            let productName = $( "input[name='lineItemName']" ).val()
-            let productDesc = $('#description-input').val()
-            let qty = $( "input[name='lineItemQty']" ).val()
-            let amount = $( "input[name='lineItemAmount']" ).val()
-
-            console.log(productName);
-            console.log(productDesc);
-            console.log(qty);
-            console.log(amount);
-
-            let jqxhr = $.ajax({
-               url: "/invoices/invoice-items",
-               method: "post",
-               data: {
-                    productId: productId,
-                    productName: productName,
-                    productDescription: productDesc,
-                    quantity: qty,
-                    unitPrice: amount
-                  }
-               })
-               .done(function() {
-                 console.log( "success" );
-               })
-               .fail(function() {
-                 console.log( "error" );
-               })
-               .always(function() {
-                 console.log( "complete" );
-               });
-
-            }
-
         });
+
 
         </script>
     </body>

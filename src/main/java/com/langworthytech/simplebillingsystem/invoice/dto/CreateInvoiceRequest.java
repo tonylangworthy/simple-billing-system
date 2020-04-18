@@ -8,55 +8,22 @@ import java.util.List;
 @Component
 public class CreateInvoiceRequest implements Serializable {
 
-    private Long invoiceId;
-
-    private String invoiceName;
-
-    private String invoiceStatus;
-
-    private Long customerId;
-
-    private Long productId;
+    private InvoiceFormModel invoice;
 
     public CreateInvoiceRequest() {}
 
-    public Long getInvoiceId() {
-        return invoiceId;
+    public InvoiceFormModel getInvoice() {
+        return invoice;
     }
 
-    public void setInvoiceId(Long invoiceId) {
-        this.invoiceId = invoiceId;
+    public void setInvoice(InvoiceFormModel invoice) {
+        this.invoice = invoice;
     }
 
-    public String getInvoiceName() {
-        return invoiceName;
-    }
-
-    public void setInvoiceName(String invoiceName) {
-        this.invoiceName = invoiceName;
-    }
-
-    public String getInvoiceStatus() {
-        return invoiceStatus;
-    }
-
-    public void setInvoiceStatus(String invoiceStatus) {
-        this.invoiceStatus = invoiceStatus;
-    }
-
-    public Long getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
-    }
-
-    public Long getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    @Override
+    public String toString() {
+        return "CreateInvoiceRequest{" +
+                "invoice=" + invoice +
+                '}';
     }
 }
