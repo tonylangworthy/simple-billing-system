@@ -4,8 +4,11 @@ import com.langworthytech.simplebillingsystem.account.Account;
 import com.langworthytech.simplebillingsystem.customer.Customer;
 import com.langworthytech.simplebillingsystem.security.User;
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,7 +22,14 @@ public class Invoice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(generator = "invoice-number")
+    @GenericGenerator(
+            name = "invoice-number",
+            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+            parameters = {
+                    @Parameter(name = "initial_value", value = "1")
+            }
+    )
     private int invoiceNum;
 
     @Column(length = 50)
@@ -44,19 +54,21 @@ public class Invoice {
     private Customer customer;
 
     @Column(updatable = false)
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
 
     @PrePersist
     protected void onCreate() {
-        this.createdAt = new Date();
+        this.createdAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        this.updatedAt = new Date();
+        this.updatedAt = LocalDateTime.now();
     }
+
+    public Invoice() {}
 
     public Invoice(String name, InvoiceStatus invoiceStatus) {
         this.name = name;

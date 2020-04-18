@@ -27,7 +27,7 @@ public class ProductController {
     }
 
     @GetMapping("")
-    public String showAllProducts(Model model) {
+    public String showProducts(Model model) {
 
         CustomUserDetails userDetails = (CustomUserDetails) authenticationFacade.getAuthentication().getPrincipal();
         model.addAttribute("userName", userDetails.getFirstName() + " " + userDetails.getLastName());

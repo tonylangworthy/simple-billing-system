@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface ICustomerService {
 
-    List<Customer> findAllCustomers();
+    Iterable<Customer> findAllCustomers();
 
     List<Customer> searchByEmailStartsWith(String term);
 

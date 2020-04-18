@@ -17,7 +17,7 @@
         <div class="dropdown-menu" aria-labelledby="billing-dropdown">
           <a class="dropdown-item" href="/invoices/create">Create Invoice</a>
           <a class="dropdown-item" href="">Create Subscription</a>
-          <a class="dropdown-item" href="">Invoices</a>
+          <a class="dropdown-item" href="/invoices">Invoices</a>
           <a class="dropdown-item" href="">Payments</a>
         </div>
       </li>

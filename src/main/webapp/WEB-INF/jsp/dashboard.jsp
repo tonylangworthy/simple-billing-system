@@ -24,7 +24,7 @@
                       <div class="btn btn-link"><a href="/invoices/create">Create</a></div>
                   </div>
                   <div class="btn-group mr-2" role="group">
-                      <div class="btn btn-link"><a href="">View</a></div>
+                      <div class="btn btn-link"><a href="/invoices">View</a></div>
                   </div>
                 </div>
               </div>

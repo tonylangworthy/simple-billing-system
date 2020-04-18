@@ -162,46 +162,56 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-3 offset-9 mb-2">
-                            <div class="row">
-                                <div class="col-md font-weight-bold">SUBTOTAL</div>
-                                <div class="col-md thin-border">0.00</div>
+                        <div class="col-6 mt-3">
+                            <div class="form-group">
+                                <label for="invoice-note-input">Note to customer</label>
+                                <textarea name="invoiceNote" class="form-control" id="invoice-note-input" rows="3"></textarea>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3 offset-9 mb-2">
-                        <div class="row">
-                            <div class="col-md font-weight-bold">TAX RATE</div>
-                            <div class="col-md">
-                            <div class="input-group input-group-sm">
-                                <div class="input-group-prepend">
-                                  <div class="input-group-text">$</div>
+                        <div class="col-3 offset-3">
+                            <div class="row">
+                                <div class="col-md-12 mb-2">
+                                    <div class="row">
+                                        <div class="col-md font-weight-bold">SUBTOTAL</div>
+                                        <div class="col-md thin-border">0.00</div>
+                                    </div>
                                 </div>
-                                <input name="lineItemAmount" type="text" class="form-control" placeholder="Tax Rate">
                             </div>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3 offset-9 mb-2">
                             <div class="row">
-                                <div class="col-md font-weight-bold">TAX</div>
-                                <div class="col-md thin-border">0.00</div>
+                                <div class="col-md-12 mb-2">
+                                <div class="row">
+                                    <div class="col-md font-weight-bold">TAX RATE</div>
+                                    <div class="col-md">
+                                    <div class="input-group input-group-sm">
+                                        <div class="input-group-prepend">
+                                          <div class="input-group-text">$</div>
+                                        </div>
+                                        <input name="lineItemAmount" type="text" class="form-control" placeholder="Tax Rate">
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3 offset-9 mb-2">
                             <div class="row">
-                                <div class="col-md font-weight-bold">TOTAL</div>
-                                <div class="col-md thin-border">0.00</div>
+                                <div class="col-md-12 mb-2">
+                                    <div class="row">
+                                        <div class="col-md font-weight-bold">TAX</div>
+                                        <div class="col-md thin-border">0.00</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 mb-2">
+                                    <div class="row">
+                                        <div class="col-md font-weight-bold">TOTAL</div>
+                                        <div class="col-md thin-border">0.00</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <hr>
-                    <button type="button" class="btn btn-primary float-right" id="finalize-btn">Finalize Invoice</button>
+                    <button type="button" class="btn btn-primary float-right" id="finalize-btn">Create Invoice</button>
                 </form>
 
     		    </div>
@@ -247,6 +257,7 @@
 
         invoice = {
             customerId: "",
+            invoiceNote: "",
             invoiceItems: []
         };
 
@@ -290,6 +301,9 @@
 
         saveInvoice() {
             console.info('Saving invoice: ' + JSON.stringify(this.invoice));
+
+            this.invoice.invoiceNote = $('#invoice-note-input').val();
+
            let jqxhr = $.ajax({
                url: "/invoices",
                method: "post",

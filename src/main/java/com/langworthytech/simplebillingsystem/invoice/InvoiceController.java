@@ -48,8 +48,6 @@ public class InvoiceController {
 
         Account account = userDetails.getUser().getAccount();
 
-        Invoice invoice = invoiceService.createDraftInvoice();
-
         CreateInvoiceResponse invoiceForm = new CreateInvoiceResponse();
         invoiceForm.setAccountCompany(account.getCompany());
         invoiceForm.setAccountAddress(account.getAddress());
@@ -71,11 +69,9 @@ public class InvoiceController {
 
         logger.info(invoiceForm.toString());
 
-//        invoiceForm.forEach((field, item) -> {
-//            logger.info("Field: " + field + " -- Value: " + item);
-//        });
+        CreateInvoiceResponse invoiceResponse = invoiceService.createInvoice(invoiceForm);
 
-        return new CreateInvoiceResponse();
+        return invoiceResponse;
     }
 
     @PutMapping("/{id}")
@@ -90,17 +86,16 @@ public class InvoiceController {
 
     }
 
+    @GetMapping("")
+    public String showInvoices(Model model) {
 
-//    @PostMapping("/invoice-items")
-//    public @ResponseBody
-//    InvoiceItemResponse createInvoiceItem(@ModelAttribute("invoiceItem") InvoiceItemFormModel invoiceItemForm) {
-//
-//        logger.info("form Data: " + invoiceItemForm.toString());
-//
-//        InvoiceItemResponse invoiceItemResponse = invoiceService.createInvoiceItem(invoiceItemForm);
-//
-//        return invoiceItemResponse;
-//    }
+        CustomUserDetails userDetails = (CustomUserDetails) authenticationFacade.getAuthentication().getPrincipal();
 
+        List<InvoiceListItemResponse> invoiceItems = invoiceService.findAllInvoices();
+
+        model.addAttribute("invoices", invoiceItems);
+        model.addAttribute("userName", userDetails.getFirstName() + " " + userDetails.getLastName());
+        return "invoice_list";
+    }
 
 }

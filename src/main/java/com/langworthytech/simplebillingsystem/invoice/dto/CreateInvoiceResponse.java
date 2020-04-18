@@ -3,9 +3,27 @@ package com.langworthytech.simplebillingsystem.invoice.dto;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class CreateInvoiceResponse implements Serializable {
+
+    private Long invoiceId;
+
+    private String invoiceName;
+
+    private String invoiceNote;
+
+    private int invoiceNumber;
+
+    private String invoiceStatus;
+
+    private String invoiceCreatedAt;
+
+    private String invoiceUpdatedAt;
+
+    private List<InvoiceItemResponse> invoiceItems = new ArrayList<>();
 
     private String accountCompany;
 
@@ -26,6 +44,69 @@ public class CreateInvoiceResponse implements Serializable {
     private String userName;
 
 
+    public Long getInvoiceId() {
+        return invoiceId;
+    }
+
+    public void setInvoiceId(Long invoiceId) {
+        this.invoiceId = invoiceId;
+    }
+
+    public String getInvoiceName() {
+        return invoiceName;
+    }
+
+    public void setInvoiceName(String invoiceName) {
+        this.invoiceName = invoiceName;
+    }
+
+    public String getInvoiceNote() {
+        return invoiceNote;
+    }
+
+    public void setInvoiceNote(String invoiceNote) {
+        this.invoiceNote = invoiceNote;
+    }
+
+    public int getInvoiceNumber() {
+        return invoiceNumber;
+    }
+
+    public void setInvoiceNumber(int invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
+    }
+
+    public String getInvoiceStatus() {
+        return invoiceStatus;
+    }
+
+    public void setInvoiceStatus(String invoiceStatus) {
+        this.invoiceStatus = invoiceStatus;
+    }
+
+    public String getInvoiceCreatedAt() {
+        return invoiceCreatedAt;
+    }
+
+    public void setInvoiceCreatedAt(String invoiceCreatedAt) {
+        this.invoiceCreatedAt = invoiceCreatedAt;
+    }
+
+    public String getInvoiceUpdatedAt() {
+        return invoiceUpdatedAt;
+    }
+
+    public void setInvoiceUpdatedAt(String invoiceUpdatedAt) {
+        this.invoiceUpdatedAt = invoiceUpdatedAt;
+    }
+
+    public List<InvoiceItemResponse> getInvoiceItems() {
+        return invoiceItems;
+    }
+
+    public void setInvoiceItems(List<InvoiceItemResponse> invoiceItems) {
+        this.invoiceItems = invoiceItems;
+    }
 
     public String getAccountCompany() {
         return accountCompany;
@@ -99,4 +180,26 @@ public class CreateInvoiceResponse implements Serializable {
         this.userName = userName;
     }
 
+    @Override
+    public String toString() {
+        return "CreateInvoiceResponse{" +
+                "invoiceId=" + invoiceId +
+                ", invoiceName='" + invoiceName + '\'' +
+                ", invoiceNote='" + invoiceNote + '\'' +
+                ", invoiceNumber=" + invoiceNumber +
+                ", invoiceStatus='" + invoiceStatus + '\'' +
+                ", invoiceCreatedAt='" + invoiceCreatedAt + '\'' +
+                ", invoiceUpdatedAt='" + invoiceUpdatedAt + '\'' +
+                ", invoiceItems=" + invoiceItems +
+                ", accountCompany='" + accountCompany + '\'' +
+                ", accountAddress='" + accountAddress + '\'' +
+                ", accountCity='" + accountCity + '\'' +
+                ", accountState='" + accountState + '\'' +
+                ", accountZip='" + accountZip + '\'' +
+                ", accountPhone='" + accountPhone + '\'' +
+                ", accountEmail='" + accountEmail + '\'' +
+                ", accountWebsite='" + accountWebsite + '\'' +
+                ", userName='" + userName + '\'' +
+                '}';
+    }
 }
