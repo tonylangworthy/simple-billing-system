@@ -133,8 +133,6 @@ public class InvoiceService implements IInvoiceService {
         return invoiceResponse;
     }
 
-
-
     @Override
     public Invoice createDraftInvoice() {
 
@@ -188,10 +186,14 @@ public class InvoiceService implements IInvoiceService {
     }
 
     @Override
-    public Invoice findInvoiceById(Long id) {
+    public CreateInvoiceResponse findInvoiceById(Long id) {
 
         Optional<Invoice> optionalInvoice = invoiceRepository.findById(id);
-        return optionalInvoice.orElseThrow(() -> new EntityNotFoundException("Invoice not found!"));
+        Invoice invoice = optionalInvoice.orElseThrow(() -> new EntityNotFoundException("Invoice not found!"));
+
+        CreateInvoiceResponse invoiceResponse = new CreateInvoiceResponse();
+
+        return invoiceResponse;
     }
 
     @Override

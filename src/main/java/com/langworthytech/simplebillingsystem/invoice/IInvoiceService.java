@@ -14,7 +14,7 @@ public interface IInvoiceService {
 
     List<InvoiceListItemResponse> findAllInvoices();
 
-    Invoice findInvoiceById(Long id);
+    CreateInvoiceResponse findInvoiceById(Long id);
 
     Invoice findInvoiceByName(String name);
 }
