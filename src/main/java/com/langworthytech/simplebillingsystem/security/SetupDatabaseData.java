@@ -62,7 +62,7 @@ public class SetupDatabaseData implements ApplicationListener<ContextRefreshedEv
         );
         // Create the roles and assign privileges to each role
         Role adminRole = authorityService.findOrCreateRole("ROLE_ADMIN", adminPrivileges);
-        authorityService.findOrCreateRole("ROLE_USER", Arrays.asList(readPrivilege));
+        Role userRole = authorityService.findOrCreateRole("ROLE_USER", Arrays.asList(readPrivilege));
 
         Optional<Account> optionalAccount = accountService.findAccountByEmail("admin@webbdealer.com");
         if(!optionalAccount.isPresent()) {
@@ -70,8 +70,8 @@ public class SetupDatabaseData implements ApplicationListener<ContextRefreshedEv
             Account newAccount = new Account();
             newAccount.setEmail("admin@webbdealer.com");
             newAccount.setCompany("Langworthy Technologies");
-            newAccount.setAddress("100 Java Lane");
-            newAccount.setCity("Coolness");
+            newAccount.setAddress("1215 Blacktop Road");
+            newAccount.setCity("Summerville");
             newAccount.setState("MO");
             newAccount.setZip("65111");
             newAccount.setPhone("555-555-5555");
@@ -79,16 +79,27 @@ public class SetupDatabaseData implements ApplicationListener<ContextRefreshedEv
             newAccount.setActive(true);
             accountService.createAccount(newAccount);
 
-            User user = new User();
-            user.setFirstName("Tony");
-            user.setLastName("Langworthy");
-            user.setPassword(passwordEncoder.encode("Acura2121"));
-            user.setEmail("tony@webbdealer.com");
-            user.setRoles(Arrays.asList(adminRole));
-            user.setEnabled(true);
-            user.setAccount(newAccount);
-            newAccount.getUsers().add(user);
-            userService.createUser(user);
+            User user1 = new User();
+            user1.setFirstName("Tony");
+            user1.setLastName("Langworthy");
+            user1.setPassword(passwordEncoder.encode("password"));
+            user1.setEmail("tony@webbdealer.com");
+            user1.setRoles(Arrays.asList(adminRole));
+            user1.setEnabled(true);
+            user1.setAccount(newAccount);
+            newAccount.getUsers().add(user1);
+            userService.createUser(user1);
+
+            User user2 = new User();
+            user2.setFirstName("Jon");
+            user2.setLastName("Doe");
+            user2.setPassword(passwordEncoder.encode("password"));
+            user2.setEmail("jdoe@gmail.com");
+            user2.setRoles(Arrays.asList(adminRole));
+            user2.setEnabled(true);
+            user2.setAccount(newAccount);
+            newAccount.getUsers().add(user2);
+            userService.createUser(user2);
         }
         alreadySetup = true;
     }
