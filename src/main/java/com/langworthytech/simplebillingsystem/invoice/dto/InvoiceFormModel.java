@@ -3,6 +3,7 @@ package com.langworthytech.simplebillingsystem.invoice.dto;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,8 @@ public class InvoiceFormModel implements Serializable {
     private Long customerId;
 
     private String invoiceNote;
+
+    private BigDecimal taxTotal;
 
     private List<InvoiceItemFormModel> invoiceItems = new ArrayList<>();
 
@@ -39,11 +42,20 @@ public class InvoiceFormModel implements Serializable {
         this.invoiceItems = invoiceItems;
     }
 
+    public BigDecimal getTaxTotal() {
+        return taxTotal;
+    }
+
+    public void setTaxTotal(BigDecimal taxTotal) {
+        this.taxTotal = taxTotal;
+    }
+
     @Override
     public String toString() {
         return "InvoiceFormModel{" +
                 "customerId=" + customerId +
                 ", invoiceNote='" + invoiceNote + '\'' +
+                ", taxTotal=" + taxTotal +
                 ", invoiceItems=" + invoiceItems +
                 '}';
     }

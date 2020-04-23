@@ -186,12 +186,12 @@ public class InvoiceService implements IInvoiceService {
     }
 
     @Override
-    public CreateInvoiceResponse findInvoiceById(Long id) {
+    public InvoiceViewResponse findInvoiceById(Long id) {
 
         Optional<Invoice> optionalInvoice = invoiceRepository.findById(id);
         Invoice invoice = optionalInvoice.orElseThrow(() -> new EntityNotFoundException("Invoice not found!"));
 
-        CreateInvoiceResponse invoiceResponse = new CreateInvoiceResponse();
+        InvoiceViewResponse invoiceResponse = new InvoiceViewResponse();
 
         return invoiceResponse;
     }
@@ -199,6 +199,26 @@ public class InvoiceService implements IInvoiceService {
     @Override
     public Invoice findInvoiceByName(String name) {
 
+        return null;
+    }
+
+    @Override
+    public BigDecimal calculateLineTotal(BigDecimal unitPrice, int quantity) {
+        return null;
+    }
+
+    @Override
+    public BigDecimal calculateSubtotal(BigDecimal invoiceItemTotal) {
+        return null;
+    }
+
+    @Override
+    public BigDecimal calculateSalesTax(BigDecimal taxRate) {
+        return null;
+    }
+
+    @Override
+    public BigDecimal calculateTotal(BigDecimal taxRate) {
         return null;
     }
 

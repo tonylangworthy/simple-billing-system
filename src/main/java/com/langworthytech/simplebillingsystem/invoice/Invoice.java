@@ -8,6 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
@@ -44,6 +45,9 @@ public class Invoice {
 
     @Lob
     private String notes;
+
+    @Column(precision = 19, scale = 4)
+    private BigDecimal taxRate;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

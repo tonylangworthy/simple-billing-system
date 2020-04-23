@@ -111,7 +111,7 @@
     		            </div>
     		        </div>
     		        <div class="row saved-line-item">
-    		            <div class="col-md-9">
+    		            <div class="col-md-7">
     		                <div class="pl-1 font-weight-bold">
     		                    Product or Service
     		                </div>
@@ -126,6 +126,11 @@
     		                    Unit Price
     		                </div>
     		            </div>
+    		            <div class="col-md-2 font-weight-bold">
+    		                <div>
+    		                    Tax
+    		                </div>
+    		            </div>
     		        </div>
     		        <div class="row">
                         <div class="col-md">
@@ -137,7 +142,7 @@
     		        <div class="row" id="line-item-form-row">
                         <div class="col-md">
                           <div class="form-row mb-2">
-                            <div class="col-9">
+                            <div class="col-7">
                                 <input name="lineItemName" type="text" class="form-control" id="product-name-input" autocomplete="off" spellcheck="false" placeholder="Product or service">
                             </div>
                             <div class="col-1">
@@ -149,6 +154,14 @@
                                       <div class="input-group-text">$</div>
                                     </div>
                                     <input name="lineItemUnitPrice" type="text" class="form-control" id="item-unit-price-input" placeholder="Unit price">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <input name="lineItemTaxRate" type="text" class="form-control" id="tax-rate-input" placeholder="Tax Rate">
+                                    <div class="input-group-append">
+                                      <div class="input-group-text">%</div>
+                                    </div>
                                 </div>
                             </div>
                           </div>
@@ -173,30 +186,15 @@
                                 <div class="col-md-12 mb-2">
                                     <div class="row">
                                         <div class="col-md font-weight-bold">SUBTOTAL</div>
-                                        <div class="col-md thin-border">0.00</div>
+                                        <div class="col-md thin-border" id="invoice-subtotal"></div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12 mb-2">
-                                <div class="row">
-                                    <div class="col-md font-weight-bold">TAX RATE</div>
-                                    <div class="col-md">
-                                    <div class="input-group input-group-sm">
-                                        <div class="input-group-prepend">
-                                          <div class="input-group-text">$</div>
-                                        </div>
-                                        <input name="lineItemAmount" type="text" class="form-control" placeholder="Tax Rate">
-                                    </div>
-                                    </div>
-                                </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12 mb-2">
                                     <div class="row">
                                         <div class="col-md font-weight-bold">TAX</div>
-                                        <div class="col-md thin-border">0.00</div>
+                                        <div class="col-md thin-border" id="invoice-tax"></div>
                                     </div>
                                 </div>
                             </div>
@@ -204,7 +202,7 @@
                                 <div class="col-md-12 mb-2">
                                     <div class="row">
                                         <div class="col-md font-weight-bold">TOTAL</div>
-                                        <div class="col-md thin-border">0.00</div>
+                                        <div class="col-md thin-border" id="invoice-total"></div>
                                     </div>
                                 </div>
                             </div>
@@ -249,124 +247,9 @@
     	<script type="text/javascript" src="${pageContext.request.contextPath}/webjars/jquery/3.0.0/jquery.min.js"></script>
     	<script type="text/javascript" src="${pageContext.request.contextPath}/webjars/typeahead.js/0.11.1/dist/typeahead.bundle.min.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="${pageContext.request.contextPath}/js/services/invoice-service.js"></script>
         <script type="text/javascript">
 
-    class Invoice {
-
-        constructor() {}
-
-        invoice = {
-            customerId: "",
-            invoiceNote: "",
-            invoiceItems: []
-        };
-
-        invoiceItem = {
-            productId: "",
-            productName: "",
-            productDescription: "",
-            itemQuantity: "",
-            unitPrice: ""
-        };
-
-        createLineItemObject() {
-
-            this.invoiceItem.productName = $('#product-name-input').val()
-            this.invoiceItem.productDescription = $('#description-input').val()
-            this.invoiceItem.itemQuantity = $('#item-quantity-input').val()
-            this.invoiceItem.unitPrice = $('#item-unit-price-input').val()
-
-            this.invoice.invoiceItems.push(this.invoiceItem);
-
-            console.log('Created line item object!!');
-            console.log(this.invoice);
-
-        } // end createLineItemObject method
-
-        displayLineItem() {
-            $(this.appendSavedLineItem()).insertBefore('#line-item-form-row');
-
-           $('#product-name-input').val('')
-           $('#description-input').val('')
-           $('#item-quantity-input').val('')
-           $('#item-unit-price-input').val('')
-
-            //this.invoiceItem.productId = null;
-            //this.invoiceItem.productName = null;
-            //this.invoiceItem.productDescription = null;
-            //this.invoiceItem.itemQuantity = null;
-            //this.invoiceItem.unitPrice = null;
-
-        } // end displayLineItem method
-
-        saveInvoice() {
-            console.info('Saving invoice: ' + JSON.stringify(this.invoice));
-
-            this.invoice.invoiceNote = $('#invoice-note-input').val();
-
-           let jqxhr = $.ajax({
-               url: "/invoices",
-               method: "post",
-               contentType: "application/json",
-               data: JSON.stringify(this.invoice)
-           })
-           .done(function(data) {
-
-             console.log(data);
-
-           })
-           .fail(function() {
-             console.log( "error" );
-           })
-           .always(function() {
-             console.log( "complete" );
-
-           });
-
-        } // end saveInvoice method
-
-        appendSavedLineItem() {
-            let lineItem = '<div class="row saved-line-item">'
-               + '<div class="col-md-9">'
-                    + '<div class="pb-2">'
-                        + '<strong>'+this.invoiceItem.productName+'</strong>'
-                    + '</div>'
-                + '</div>'
-                + '<div class="col-md-1">'
-                    + '<div class="pb-2">'+this.invoiceItem.itemQuantity+'</div>'
-                + '</div>'
-                + '<div class="col-md-2">'
-                    + '<div class="pb-2">'+this.invoiceItem.unitPrice+'</div>'
-                + '</div>'
-            + '</div>'
-            + '<div class="row">'
-                   + '<div class="col-md">'
-                       + '<small class="text-muted">'+this.invoiceItem.productDescription+'</small>'
-                   + '</div>'
-               + '</div>'
-            + '<div class="row">'
-                   + '<div class="col-md">'
-                       + '<div class="item-separator pt-1 mb-2"></div>'
-                   + '</div>'
-               + '</div>'
-            return lineItem;
-        } // end addSavedLineItem method
-
-        set customerId(id) {
-            this.invoice.customerId = id;
-        }
-
-        set productId(id) {
-            this.invoiceItem.productId = id;
-        }
-
-        set invoiceItem(item) {
-            this.invoice.invoiceItems.push(item);
-        }
-
-    } // end Invoice class
-
-    const invoice = new Invoice();
 
 
 
@@ -375,129 +258,6 @@
 
 
 
-        $(document).ready(function(){
-            let customerId;
-            let productId;
-            let invoiceItems = [];
-
-            let customers = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.whitespace,
-              queryTokenizer: Bloodhound.tokenizers.obj.whitespace('email'),
-              prefetch: '/customers/autocomplete/term',
-              remote: {
-                url: '/customers/autocomplete/term',
-                wildcard: "term"
-              }
-            });
-
-            let products = new Bloodhound({
-              datumTokenizer: Bloodhound.tokenizers.whitespace,
-              queryTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-              prefetch: '/products/autocomplete/term',
-              remote: {
-                url: '/products/autocomplete/term',
-                wildcard: "term"
-              }
-            });
-
-            const options = {highlight: true}
-
-            $('.typeahead').typeahead(options, {
-              minLength: 1,
-              display: 'email',
-              source: customers
-            });
-
-            $('#product-name-input').typeahead(options, {
-              minLength: 3,
-              display: 'name',
-              source: products
-            });
-
-            $('.typeahead').bind('typeahead:select', function(e, customer) {
-                console.log(customer);
-                document.getElementById('bill-to').innerHTML =
-                "<strong>" + customer.firstName + " " + customer.lastName + "</strong><br>"
-                + customer.companyName + "<br>"
-                + customer.email + "<br>"
-                + customer.phone;
-
-                invoice.customerId = customer.id;
-                document.getElementById('customer-id-input').value = customer.id;
-            });
-
-            $('#product-name-input').bind('typeahead:select', function(e, product) {
-                console.log(product);
-                $('#description-input').val(product.description);
-                invoice.productId = product.id;
-                console.log('productId: ' + productId);
-
-            });
-
-            $('#customer-save-btn').on('click', function(e) {
-                console.log('button clicked!');
-                $('#customer-form').on('click', function(e) {
-                    e.preventDefault();
-                    saveCustomer()
-                    $('#customer-form-modal').modal('hide');
-
-                });
-            });
-
-            $('#add-item-row-btn').on('click', function(e) {
-
-                invoice.createLineItemObject();
-
-                invoice.displayLineItem();
-            });
-
-            $('#finalize-btn').on('click', function(e) {
-
-                invoice.saveInvoice();
-            });
-
-            function saveCustomer() {
-
-                let firstname = $('#customer-form').find( "input[name='firstName']" ).val();
-                let lastname = $('#customer-form').find( "input[name='lastName']" ).val();
-                let email = $('#customer-form').find( "input[name='email']" ).val();
-                let phone = $('#customer-form').find( "input[name='phone']" ).val();
-                let company = $('#customer-form').find( "input[name='companyName']" ).val();
-
-                console.info($('#customer-form').find( "input[name='firstName']" ).val());
-
-                 let jqxhr = $.ajax({
-                   url: "/customers",
-                   method: "post",
-                   data: {
-                        firstName: firstname,
-                        lastName: lastname,
-                        email: email,
-                        phone: phone,
-                        companyName: company
-                      }
-                   })
-                   .done(function(data) {
-                     console.log( "success" );
-                     console.log(data);
-                     invoice.customerId = data.id;
-                   })
-                   .fail(function() {
-                     console.log( "error" );
-                   })
-                   .always(function() {
-                        console.log("always");
-                   });
-
-                 // Perform other work here ...
-
-                 // Set another completion function for the request above
-                 jqxhr.always(function() {
-                   console.log( "second complete" );
-                 });
-            }
-
-        });
 
 
         </script>

@@ -18,6 +18,8 @@ public class InvoiceItemFormModel implements Serializable {
 
     private BigDecimal unitPrice;
 
+    private BigDecimal taxRate;
+
     public Long getProductId() {
         return productId;
     }
@@ -58,6 +60,14 @@ public class InvoiceItemFormModel implements Serializable {
         this.unitPrice = unitPrice;
     }
 
+    public BigDecimal getTaxRate() {
+        return taxRate;
+    }
+
+    public void setTaxRate(BigDecimal taxRate) {
+        this.taxRate = taxRate;
+    }
+
     @Override
     public String toString() {
         return "InvoiceItemFormModel{" +
@@ -66,6 +76,7 @@ public class InvoiceItemFormModel implements Serializable {
                 ", productDescription='" + productDescription + '\'' +
                 ", itemQuantity=" + itemQuantity +
                 ", unitPrice=" + unitPrice +
+                ", taxRate=" + taxRate +
                 '}';
     }
 }

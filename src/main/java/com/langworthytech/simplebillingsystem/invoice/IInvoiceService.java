@@ -2,6 +2,7 @@ package com.langworthytech.simplebillingsystem.invoice;
 
 import com.langworthytech.simplebillingsystem.invoice.dto.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface IInvoiceService {
@@ -14,7 +15,15 @@ public interface IInvoiceService {
 
     List<InvoiceListItemResponse> findAllInvoices();
 
-    CreateInvoiceResponse findInvoiceById(Long id);
+    InvoiceViewResponse findInvoiceById(Long id);
 
     Invoice findInvoiceByName(String name);
+
+    BigDecimal calculateLineTotal(BigDecimal unitPrice, int quantity);
+
+    BigDecimal calculateSubtotal(BigDecimal invoiceItemTotal);
+
+    BigDecimal calculateSalesTax(BigDecimal taxRate);
+
+    BigDecimal calculateTotal(BigDecimal taxRate);
 }
