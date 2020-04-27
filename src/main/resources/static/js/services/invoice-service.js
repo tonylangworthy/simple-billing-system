@@ -2,7 +2,7 @@ class InvoiceService {
 
     constructor() {}
 
-    lineItemCount = 0;
+    lineItemCount = 1;
 
     invoice = {
         customerId: "",
@@ -23,19 +23,20 @@ class InvoiceService {
         tax: 0
     };
     
-    addInvoiceItem() {
+    addInvoiceItem(el) {
+    	console.log("Element: " + el.name + " -- Value: " + el.value);
         this.createLineItemObject();
-        this.displayLineItem();
+//        this.displayLineItem();
         this.calculateSubtotal();
         this.calculateSalesTax();
     }
 
     createLineItemObject() {
 
-        this.invoiceItem.productName = $('#product-name-input').val()
-        this.invoiceItem.productDescription = $('#description-input').val()
-        this.invoiceItem.itemQuantity = $('#item-quantity-input').val()
-        this.invoiceItem.unitPrice = $('#item-unit-price-input').val()
+        this.invoiceItem.productName = $('#product-name-input-'+this.lineItemCount).val()
+        this.invoiceItem.productDescription = $('#description-input-'+this.lineItemCount).val()
+        this.invoiceItem.itemQuantity = $('#item-quantity-input-'+this.lineItemCount).val()
+        this.invoiceItem.unitPrice = $('#item-unit-price-input-'+this.lineItemCount).val()
 
         this.invoice.invoiceItems.push(this.invoiceItem);
 
@@ -45,12 +46,28 @@ class InvoiceService {
     } // end createLineItemObject method
 
     displayLineItem(e) {
-        $(this.appendSavedLineItem()).insertBefore('#line-item-form-row');
+    	
+    	console.log('Adding new row');
+    	let currentRow = this.lineItemCount;
+    	
+        $(this.getNewItemRow()).insertAfter('#line-item-form-row-'+currentRow);
 
-       $('#product-name-input').val('')
-       $('#description-input').val('')
-       $('#item-quantity-input').val('')
-       $('#item-unit-price-input').val('')
+        $('#item-quantity-input-'+this.lineItemCount).on('change', function(e) {
+        	invoiceObj.addInvoiceItem(this);
+        });
+
+        $('#item-unit-price-input-'+this.lineItemCount).on('change', function(e) {
+        	invoiceObj.addInvoiceItem(this);
+        });
+
+        $('#tax-rate-input-'+this.lineItemCount).on('change', function(e) {
+        	invoiceObj.addInvoiceItem(this);
+        });
+
+//        $('#product-name-input-'+this.lineItemCount).val('')
+//       $('#description-input-'+this.lineItemCount).val('')
+//       $('#item-quantity-input-'+this.lineItemCount).val('')
+//       $('#item-unit-price-input-'+this.lineItemCount).val('')
 
         //this.invoiceItem.productId = null;
         //this.invoiceItem.productName = null;
@@ -60,68 +77,87 @@ class InvoiceService {
 
     } // end displayLineItem method
 
-    saveInvoice() {
-        console.info('Saving invoice: ' + JSON.stringify(this.invoice));
-
-        this.invoice.invoiceNote = $('#invoice-note-input').val();
-        this.invoice.taxRate = $('#invoice-tax-rate').val();
-
-       let jqxhr = $.ajax({
-           url: "/invoices",
-           method: "post",
-           contentType: "application/json",
-           data: JSON.stringify(this.invoice)
-       })
-       .done(function(data) {
-
-         console.log(data);
-
-       })
-       .fail(function() {
-         console.log( "error" );
-       })
-       .always(function() {
-         console.log( "complete" );
-
-       });
-
-    } // end saveInvoice method
-
-    appendSavedLineItem() {
-    	console.log('appendSavedLineItem()');
-    	console.log(this.invoiceItem.taxRate);
-    	
-       	this.lineItemCount++;
-
-        let lineItem = '<div class="row saved-line-item">'
-           + '<div class="col-md-7">'
-                + '<div class="pb-2">'
-                    + '<strong>'+this.invoiceItem.productName+'</strong>'
-                + '</div>'
-            + '</div>'
-            + '<div class="col-md-1">'
-                + '<div class="pb-2">'+this.invoiceItem.itemQuantity+'</div>'
-            + '</div>'
-            + '<div class="col-md-2">'
-                + '<div class="pb-2">'+this.invoiceItem.unitPrice+'</div>'
-            + '</div>'
-            + '<div class="col-md-2">'
-                + '<div class="pb-2" id="item-tax-amount-'+this.lineItemCount+'"></div>'
-            + '</div>'
+    getNewItemRow() {
+        
+	   	this.lineItemCount++;
+		
+		let lineItem = '<div class="row">'
+	    + '<div class="col-md">'
+        + '<div class="item-separator pt-3 mb-3"></div>'
         + '</div>'
-        + '<div class="row">'
-               + '<div class="col-md">'
-                   + '<small class="text-muted">'+this.invoiceItem.productDescription+'</small>'
-               + '</div>'
-           + '</div>'
-        + '<div class="row">'
-               + '<div class="col-md">'
-                   + '<div class="item-separator pt-1 mb-2"></div>'
-               + '</div>'
-           + '</div>'
-
-        return lineItem;
-    } // end addSavedLineItem method
+        + '</div>'
+		+ '<div class="row" id="line-item-form-row-'+this.lineItemCount+'">'
+	    + '<div class="col-md">'
+	    + '<div class="form-row mb-2">'
+	    + '<div class="col-7">'
+	    + '<input name="invoiceItems['+(this.lineItemCount-1)+'].productName" type="text" class="form-control" id="product-name-input-'+this.lineItemCount+'" autocomplete="off" spellcheck="false" placeholder="Product or service">'
+	    + '</div>'
+	    + '<div class="col-1">'
+	    + '<input name="invoiceItems['+(this.lineItemCount-1)+'].itemQuantity" type="text" class="form-control" id="item-quantity-input-'+this.lineItemCount+'" placeholder="Qty">'
+	    + '</div>'
+	    + '<div class="col-2">'
+	    + '<div class="input-group">'
+	    + '<div class="input-group-prepend">'
+	    + '<div class="input-group-text">$</div>'
+	    + '</div>'
+	    + '<input name="invoiceItems['+(this.lineItemCount-1)+'].unitPrice" type="text" class="form-control" id="item-unit-price-input-'+this.lineItemCount+'" placeholder="Unit price">'
+	    + '</div>'
+	    + '</div>'
+	    + '<div class="col-2">'
+	    + '<div class="input-group">'
+	    + '<input name="invoiceItems['+(this.lineItemCount-1)+'].taxRate" type="text" class="form-control" id="tax-rate-input-'+this.lineItemCount+'" placeholder="Tax Rate">'
+	    + '<div class="input-group-append">'
+	    + '<div class="input-group-text">%</div>'
+	    + '</div>'
+	    + '</div>'
+	    + '</div>'
+	    + '</div>'
+	    + '<div class="row">'
+	    + '<div class="col-md-12">'
+	    + '<textarea name="invoiceItems['+(this.lineItemCount-1)+'].productDescription" id="description-input-'+this.lineItemCount+'" class="form-control" placeholder="Provide a brief description of your product or service"></textarea>'
+	    + '</div>'
+	    + '</div>'
+	    + '</div>'
+	    + '</div>';
+		
+	    return lineItem;
+    }
+    
+//    appendSavedLineItem() {
+//    	console.log('appendSavedLineItem()');
+//    	console.log(this.invoiceItem.taxRate);
+//    	
+//       	this.lineItemCount++;
+//
+//        let lineItem = '<div class="row saved-line-item">'
+//           + '<div class="col-md-7">'
+//                + '<div class="pb-2">'
+//                    + '<strong>'+this.invoiceItem.productName+'</strong>'
+//                + '</div>'
+//            + '</div>'
+//            + '<div class="col-md-1">'
+//                + '<div class="pb-2">'+this.invoiceItem.itemQuantity+'</div>'
+//            + '</div>'
+//            + '<div class="col-md-2">'
+//                + '<div class="pb-2">'+this.invoiceItem.unitPrice+'</div>'
+//            + '</div>'
+//            + '<div class="col-md-2">'
+//                + '<div class="pb-2" id="item-tax-amount-'+this.lineItemCount+'"></div>'
+//            + '</div>'
+//        + '</div>'
+//        + '<div class="row">'
+//               + '<div class="col-md">'
+//                   + '<small class="text-muted">'+this.invoiceItem.productDescription+'</small>'
+//               + '</div>'
+//           + '</div>'
+//        + '<div class="row">'
+//               + '<div class="col-md">'
+//                   + '<div class="item-separator pt-1 mb-2"></div>'
+//               + '</div>'
+//           + '</div>'
+//
+//        return lineItem;
+//    } // end addSavedLineItem method
 
     calculateSubtotal() {
 
@@ -151,15 +187,18 @@ class InvoiceService {
 
     calculateSalesTax() {
     	
-    	if($('#tax-rate-input').val().trim() == '' || $('#tax-rate-input').val().trim() == 0) { return; }
+    	console.log($('#tax-rate-input-'+this.lineItemCount).val());
+    	let taxRateVal = $('#tax-rate-input-'+this.lineItemCount).val().trim();
     	
-    	let inputTaxRate = Number.parseFloat($('#tax-rate-input').val());
+    	if(taxRateVal == '' || taxRateVal == 0) { return; }
+    	
+    	let inputTaxRate = Number.parseFloat(taxRateVal);
     	
         console.log("Tax rate from form: " + inputTaxRate);
         console.log("typeof: " + typeof inputTaxRate);
 
         if(typeof inputTaxRate == 'number') {
-            this.invoiceItem.taxRate = Number.parseFloat($('#tax-rate-input').val());
+            this.invoiceItem.taxRate = Number.parseFloat(taxRateVal);
 
             let taxRate = this.invoiceItem.taxRate;
             let subtotalCents = this.invoice.subtotal;
@@ -225,7 +264,7 @@ class InvoiceService {
     updateSalesTaxField(itemTax) {
     	let invoiceTax = this.invoice.taxTotal / 100;
     	let lineItemTax = this.invoiceItem.tax / 100;
-    	document.getElementById("item-tax-amount-"+this.lineItemCount).innerHTML = lineItemTax;
+//    	document.getElementById("item-tax-amount-"+this.lineItemCount).innerHTML = lineItemTax;
         document.getElementById("invoice-tax").innerHTML = '$' + invoiceTax.toFixed(2);
     }
 
@@ -237,6 +276,35 @@ class InvoiceService {
     	total = total / 100;
         document.getElementById("invoice-total").innerHTML = '$' + total.toFixed(2);
     }
+
+    saveInvoice() {
+        console.info('Saving invoice: ' + JSON.stringify(this.invoice));
+
+        this.invoice.invoiceNote = $('#invoice-note-input').val();
+        this.invoice.taxRate = $('#invoice-tax-rate').val();
+
+       let jqxhr = $.ajax({
+           url: "/invoices",
+           method: "post",
+           contentType: "application/json",
+//           contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+           dataType: "html",
+           data: JSON.stringify(this.invoice)
+       })
+       .done(function(data) {
+
+         console.log(data);
+
+       })
+       .fail(function() {
+         console.log( "error" );
+       })
+       .always(function() {
+         console.log( "complete" );
+
+       });
+
+    } // end saveInvoice method
 
     toBankersRounding(value, precision) {
         let exponentialForm = Number(value + 'e' + precision);
@@ -353,8 +421,20 @@ const invoiceObj = new InvoiceService();
                 });
             });
 
+            $('#item-quantity-input-1').on('change', function(e) {
+            	invoiceObj.addInvoiceItem(this);
+            });
+
+            $('#item-unit-price-input-1').on('change', function(e) {
+            	invoiceObj.addInvoiceItem(this);
+            });
+
+            $('#tax-rate-input-1').on('change', function(e) {
+            	invoiceObj.addInvoiceItem(this);
+            });
+
             $('#add-item-row-btn').on('click', function(e) {
-            	invoiceObj.addInvoiceItem();
+            	invoiceObj.displayLineItem();
             });
 
             $('#invoice-tax-rate').on('change', function() {
@@ -363,10 +443,10 @@ const invoiceObj = new InvoiceService();
                 invoiceObj.calculateTotal();
             });
 
-            $('#finalize-btn').on('click', function(e) {
-
-                invoiceObj.saveInvoice();
-            });
+//            $('#invoice-save-btn').on('submit', function(e) {
+//
+//                invoiceObj.saveInvoice();
+//            });
 
             function saveCustomer() {
 

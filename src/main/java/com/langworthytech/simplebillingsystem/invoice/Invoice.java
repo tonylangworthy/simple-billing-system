@@ -46,8 +46,11 @@ public class Invoice {
     @Lob
     private String notes;
 
-    @Column(precision = 19, scale = 4)
-    private BigDecimal taxRate;
+    private BigDecimal subtotal;
+    
+    private BigDecimal tax;
+    
+    private BigDecimal total;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

@@ -21,7 +21,31 @@ public class AccountViewResponse {
     private String email;
 
     private String website;
-
+    
+    public AccountViewResponse() {}
+    
+    public AccountViewResponse(
+    		Long id, 
+    		String company, 
+    		String address, 
+    		String city, 
+    		String state, 
+    		String zip, 
+    		String phone, 
+    		String email, 
+    		String website
+    		) {
+    	this.id = id;
+    	this.company = company;
+    	this.address = address;
+    	this.city = city;
+    	this.state = state;
+    	this.zip = zip;
+    	this.phone = phone;
+    	this.email = email;
+    	this.website = website;
+    }
+    
     public Long getId() {
         return id;
     }

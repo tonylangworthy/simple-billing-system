@@ -10,7 +10,7 @@
     <link type="text/css" href="${jstlCss}" rel="stylesheet" />
     </head>
     <body>
-        <jsp:include page="_navbar.jsp">
+        <jsp:include page="layout/_navbar.jsp">
             <jsp:param name="userName" value="${userName}"/>
         </jsp:include>
         <div class="container">

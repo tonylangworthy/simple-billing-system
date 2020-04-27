@@ -10,10 +10,15 @@ import java.util.List;
 @Component
 public class InvoiceFormModel implements Serializable {
 
-    private Long customerId;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Long customerId;
 
     private String invoiceNote;
-
+    
     private BigDecimal taxTotal;
 
     private List<InvoiceItemFormModel> invoiceItems = new ArrayList<>();
@@ -33,8 +38,8 @@ public class InvoiceFormModel implements Serializable {
     public void setInvoiceNote(String invoiceNote) {
         this.invoiceNote = invoiceNote;
     }
-
-    public List<InvoiceItemFormModel> getInvoiceItems() {
+    
+	public List<InvoiceItemFormModel> getInvoiceItems() {
         return invoiceItems;
     }
 

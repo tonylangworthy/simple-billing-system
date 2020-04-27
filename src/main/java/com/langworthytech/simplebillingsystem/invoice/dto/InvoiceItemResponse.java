@@ -8,7 +8,12 @@ import java.math.BigDecimal;
 @Component
 public class InvoiceItemResponse implements Serializable {
 
-    private String productName;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String productName;
 
     private String productDescription;
 
@@ -17,8 +22,34 @@ public class InvoiceItemResponse implements Serializable {
     private int quantity;
 
     private BigDecimal unitPrice;
+    
+    private BigDecimal taxRate;
+    
+    private BigDecimal taxAmount;
 
     private BigDecimal amount;
+    
+    public InvoiceItemResponse() {}
+    
+    public InvoiceItemResponse(
+    		Long invoiceItemId, 
+    		String productName, 
+    		String productDescription, 
+    		int quantity, 
+    		BigDecimal unitPrice,
+    		BigDecimal taxRate,
+    		BigDecimal taxAmount,
+    		BigDecimal amount
+    ) {
+    	this.invoiceItemId = invoiceItemId;
+    	this.productName = productName;
+    	this.productDescription = productDescription;
+    	this.quantity = quantity;
+    	this.unitPrice = unitPrice;
+    	this.taxRate = taxRate;
+    	this.taxAmount = taxAmount;
+    	this.amount = amount;
+    }
 
     public String getProductName() {
         return productName;
@@ -59,8 +90,24 @@ public class InvoiceItemResponse implements Serializable {
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
     }
+    
+    public BigDecimal getTaxRate() {
+		return taxRate;
+	}
 
-    public BigDecimal getAmount() {
+	public void setTaxRate(BigDecimal taxRate) {
+		this.taxRate = taxRate;
+	}
+
+	public BigDecimal getTaxAmount() {
+		return taxAmount;
+	}
+
+	public void setTaxAmount(BigDecimal taxAmount) {
+		this.taxAmount = taxAmount;
+	}
+
+	public BigDecimal getAmount() {
         return amount;
     }
 

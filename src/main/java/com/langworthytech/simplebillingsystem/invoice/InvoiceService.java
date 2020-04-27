@@ -1,20 +1,27 @@
 package com.langworthytech.simplebillingsystem.invoice;
 
 import com.langworthytech.simplebillingsystem.account.Account;
+import com.langworthytech.simplebillingsystem.account.dto.AccountViewResponse;
 import com.langworthytech.simplebillingsystem.customer.Customer;
 import com.langworthytech.simplebillingsystem.customer.CustomerRepository;
 import com.langworthytech.simplebillingsystem.customer.CustomerService;
+import com.langworthytech.simplebillingsystem.customer.dto.CustomerResponse;
 import com.langworthytech.simplebillingsystem.invoice.dto.*;
 import com.langworthytech.simplebillingsystem.product.Product;
 import com.langworthytech.simplebillingsystem.product.ProductService;
+import com.langworthytech.simplebillingsystem.security.AuthenticatedUser;
 import com.langworthytech.simplebillingsystem.security.AuthenticationFacade;
 import com.langworthytech.simplebillingsystem.security.CustomUserDetails;
+import com.langworthytech.simplebillingsystem.security.User;
+
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -35,19 +42,23 @@ public class InvoiceService implements IInvoiceService {
     private CustomerRepository customerRepository;
 
     private InvoiceStatusRepository statusRepository;
+    
+    private ModelMapper modelMapper;
 
     public InvoiceService(
             InvoiceItemRepository invoiceItemRepository,
             InvoiceRepository invoiceRepository,
             ProductService productService,
             CustomerRepository customerRepository,
-            InvoiceStatusRepository statusRepository
+            InvoiceStatusRepository statusRepository,
+            ModelMapper modelMapper
     ) {
         this.invoiceItemRepository = invoiceItemRepository;
         this.invoiceRepository = invoiceRepository;
         this.productService = productService;
         this.customerRepository = customerRepository;
         this.statusRepository = statusRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -64,12 +75,17 @@ public class InvoiceService implements IInvoiceService {
             product = optionalProduct.orElseThrow(() -> new EntityNotFoundException("Product not found!"));
         }
 
-        BigDecimal qty = new BigDecimal(invoiceItem.getItemQuantity());
-        BigDecimal amount = invoiceItem.getUnitPrice().multiply(qty);
-
+        BigDecimal itemSubtotal = calculateSubtotal(invoiceItem.getUnitPrice(), invoiceItem.getItemQuantity());
+        
+        BigDecimal taxAmount = calculateSalesTax(invoiceItem.getTaxRate(), itemSubtotal);
+        
+        BigDecimal itemTotal = calculateTotal(taxAmount, itemSubtotal);
+        
         InvoiceItem item = new InvoiceItem();
         item.setQuantity(invoiceItem.getItemQuantity());
-        item.setAmount(amount);
+        item.setTaxRate(invoiceItem.getTaxRate());
+        item.setTaxAmount(taxAmount);
+        item.setAmount(itemTotal);
 
         item.setProduct(product);
 
@@ -79,17 +95,18 @@ public class InvoiceService implements IInvoiceService {
         invoiceItemResponse.setInvoiceItemId(savedInvoiceItem.getId());
         invoiceItemResponse.setProductName(savedInvoiceItem.getProduct().getName());
         invoiceItemResponse.setProductDescription(savedInvoiceItem.getProduct().getDescription());
-        invoiceItemResponse.setQuantity(savedInvoiceItem.getQuantity());
         invoiceItemResponse.setUnitPrice(savedInvoiceItem.getAmount());
+        invoiceItemResponse.setQuantity(savedInvoiceItem.getQuantity());
+        invoiceItemResponse.setTaxRate(savedInvoiceItem.getTaxRate());
+        invoiceItemResponse.setTaxAmount(savedInvoiceItem.getTaxAmount());
+        invoiceItemResponse.setAmount(savedInvoiceItem.getAmount());
 
         return invoiceItemResponse;
     }
 
     @Override
-    public CreateInvoiceResponse createInvoice(InvoiceFormModel invoiceFormModel) {
+    public CreateInvoiceResponse createInvoice(InvoiceFormModel invoiceFormModel, CustomUserDetails userDetails) {
 
-        AuthenticationFacade authenticationFacade = new AuthenticationFacade();
-        CustomUserDetails userDetails = (CustomUserDetails) authenticationFacade.getAuthentication().getPrincipal();
         Account account = userDetails.getUser().getAccount();
 
         Invoice invoice = createDraftInvoice();
@@ -99,8 +116,16 @@ public class InvoiceService implements IInvoiceService {
         invoice.setCustomer(customer);
 
         invoice.setNotes(invoiceFormModel.getInvoiceNote());
-
+        
         CreateInvoiceResponse invoiceResponse = new CreateInvoiceResponse();
+
+        List<InvoiceItemResponse> invoiceItemResponseList = new ArrayList<>();
+        invoiceFormModel.getInvoiceItems().forEach(item -> {
+        	invoiceItemResponseList.add(createInvoiceItem(item));
+        });
+        
+        invoiceResponse.setInvoiceItems(invoiceItemResponseList);
+
         invoiceResponse.setAccountCompany(account.getCompany());
         invoiceResponse.setAccountAddress(account.getAddress());
         invoiceResponse.setAccountCity(account.getCity());
@@ -122,11 +147,6 @@ public class InvoiceService implements IInvoiceService {
         invoiceResponse.setInvoiceCreatedAt(createdAt.format(formatter));
         invoiceResponse.setInvoiceUpdatedAt(createdAt.format(formatter));
 
-
-        invoiceFormModel.getInvoiceItems().forEach(item -> {
-
-            invoiceResponse.getInvoiceItems().add(createInvoiceItem(item));
-        });
 
         logger.info(invoiceResponse.toString());
 
@@ -186,14 +206,69 @@ public class InvoiceService implements IInvoiceService {
     }
 
     @Override
-    public InvoiceViewResponse findInvoiceById(Long id) {
+    public InvoiceViewResponse findInvoiceById(Long id) throws EntityNotFoundException {
 
         Optional<Invoice> optionalInvoice = invoiceRepository.findById(id);
         Invoice invoice = optionalInvoice.orElseThrow(() -> new EntityNotFoundException("Invoice not found!"));
 
-        InvoiceViewResponse invoiceResponse = new InvoiceViewResponse();
+        User user = invoice.getUser();
+        
+        Account account = user.getAccount();
+        AccountViewResponse accountView = new AccountViewResponse(
+        		account.getId(),
+        		account.getCompany(),
+        		account.getAddress(),
+        		account.getCity(),
+        		account.getState(),
+        		account.getZip(),
+        		account.getPhone(),
+        		account.getEmail(),
+        		account.getWebsite()
+        );
+        
+        Customer customer = invoice.getCustomer();
+        CustomerResponse customerView = new CustomerResponse(
+        		customer.getId(),
+        		customer.getFirstName(),
+        		customer.getLastName(),
+        		customer.getEmail(),
+        		customer.getPhone(),
+        		customer.getCompanyName()
+        );
+        
+        List<InvoiceItemResponse> invoiceItems = new ArrayList<>();
+        invoice.getInvoiceItems().forEach(item -> {
+        	InvoiceItemResponse invoiceItemView = new InvoiceItemResponse();
+        	invoiceItemView.setInvoiceItemId(item.getId());
+        	invoiceItemView.setProductName(item.getProduct().getName());
+        	invoiceItemView.setProductDescription(item.getProduct().getDescription());
+        	invoiceItemView.setQuantity(item.getQuantity());
+        	invoiceItemView.setTaxRate(item.getTaxRate());
+        	invoiceItemView.setAmount(item.getAmount());
+        	invoiceItems.add(invoiceItemView);
+        });
 
-        return invoiceResponse;
+        InvoiceViewResponse invoiceView = new InvoiceViewResponse();
+        invoiceView.setInvoiceId(invoice.getId());
+        invoiceView.setInvoiceName(invoice.getName());
+        invoiceView.setInvoiceNote(invoice.getNotes());
+        invoiceView.setInvoiceNumber(invoice.getInvoiceNum());
+        invoiceView.setInvoiceStatus(invoice.getInvoiceStatus().getName());
+        invoiceView.setInvoiceSubtotal(invoice.getSubtotal());
+        invoiceView.setInvoiceTax(invoice.getTax());
+        invoiceView.setInvoiceTotal(invoice.getTotal());
+        
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        invoiceView.setInvoiceCreatedAt(invoice.getCreatedAt().format(formatter));
+        invoiceView.setInvoiceUpdatedAt(invoice.getUpdatedAt().format(formatter));
+        
+        invoiceView.setInvoiceItems(invoiceItems);
+        invoiceView.setAccount(accountView);
+        invoiceView.setCustomer(customerView);
+        
+        invoiceView.setUserName(user.getFirstName() + " " + user.getLastName());
+        
+        return invoiceView;
     }
 
     @Override
@@ -203,23 +278,22 @@ public class InvoiceService implements IInvoiceService {
     }
 
     @Override
-    public BigDecimal calculateLineTotal(BigDecimal unitPrice, int quantity) {
-        return null;
+    public BigDecimal calculateSubtotal(BigDecimal unitPrice, int quantity) {
+    	BigDecimal qty = new BigDecimal(quantity);
+        return unitPrice.multiply(qty);
     }
 
     @Override
-    public BigDecimal calculateSubtotal(BigDecimal invoiceItemTotal) {
-        return null;
+    public BigDecimal calculateSalesTax(BigDecimal taxRate, BigDecimal subtotal) {
+        
+    	BigDecimal taxDecimal = taxRate.divide(BigDecimal.valueOf(100));
+    	BigDecimal taxAmount = taxDecimal.multiply(subtotal);
+    	return taxAmount.setScale(2, RoundingMode.HALF_EVEN);
     }
 
     @Override
-    public BigDecimal calculateSalesTax(BigDecimal taxRate) {
-        return null;
-    }
-
-    @Override
-    public BigDecimal calculateTotal(BigDecimal taxRate) {
-        return null;
+    public BigDecimal calculateTotal(BigDecimal tax, BigDecimal subtotal) {
+        return subtotal.add(tax).setScale(2, RoundingMode.HALF_EVEN);
     }
 
 

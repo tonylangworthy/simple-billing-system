@@ -12,7 +12,12 @@ import java.util.List;
 @Component
 public class InvoiceViewResponse implements Serializable {
 
-    private Long invoiceId;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Long invoiceId;
 
     private String invoiceName;
 
@@ -23,8 +28,6 @@ public class InvoiceViewResponse implements Serializable {
     private String invoiceStatus;
 
     private BigDecimal invoiceSubtotal;
-
-    private BigDecimal invoiceTaxRate;
 
     private BigDecimal invoiceTax;
 
@@ -88,14 +91,6 @@ public class InvoiceViewResponse implements Serializable {
 
     public void setInvoiceSubtotal(BigDecimal invoiceSubtotal) {
         this.invoiceSubtotal = invoiceSubtotal;
-    }
-
-    public BigDecimal getInvoiceTaxRate() {
-        return invoiceTaxRate;
-    }
-
-    public void setInvoiceTaxRate(BigDecimal invoiceTaxRate) {
-        this.invoiceTaxRate = invoiceTaxRate;
     }
 
     public BigDecimal getInvoiceTax() {
@@ -171,7 +166,6 @@ public class InvoiceViewResponse implements Serializable {
                 ", invoiceNumber=" + invoiceNumber +
                 ", invoiceStatus='" + invoiceStatus + '\'' +
                 ", invoiceSubtotal=" + invoiceSubtotal +
-                ", invoiceTaxRate=" + invoiceTaxRate +
                 ", invoiceTax=" + invoiceTax +
                 ", invoiceTotal=" + invoiceTotal +
                 ", invoiceCreatedAt='" + invoiceCreatedAt + '\'' +

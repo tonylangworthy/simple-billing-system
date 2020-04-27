@@ -17,11 +17,16 @@ public class InvoiceItem {
     private Long id;
 
     private int quantity;
+    
+    @Column(precision = 19, scale = 4)
+    private BigDecimal taxRate;
+    
+    private BigDecimal taxAmount;
 
     // unit_amount * quantity
     @Column(nullable = false)
     private BigDecimal amount;
-
+    
     @OneToOne
     @JoinColumn(name = "product_id")
     private Product product;

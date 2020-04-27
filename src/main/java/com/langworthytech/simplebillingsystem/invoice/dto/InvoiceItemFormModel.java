@@ -8,7 +8,12 @@ import java.math.BigDecimal;
 @Component
 public class InvoiceItemFormModel implements Serializable {
 
-    private Long productId;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Long productId;
 
     private String productName;
 

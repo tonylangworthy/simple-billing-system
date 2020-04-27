@@ -5,6 +5,7 @@ import com.langworthytech.simplebillingsystem.invoice.dto.*;
 import com.langworthytech.simplebillingsystem.invoice.dto.InvoiceItemFormModel;
 import com.langworthytech.simplebillingsystem.product.IProductService;
 import com.langworthytech.simplebillingsystem.product.ProductService;
+import com.langworthytech.simplebillingsystem.security.AuthenticatedUser;
 import com.langworthytech.simplebillingsystem.security.AuthenticationFacade;
 import com.langworthytech.simplebillingsystem.security.CustomUserDetails;
 import com.langworthytech.simplebillingsystem.security.IAuthenticationFacade;
@@ -18,6 +19,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import javax.persistence.EntityNotFoundException;
 
 @Controller
 @RequestMapping("/invoices")
@@ -39,10 +42,9 @@ public class InvoiceController {
     }
 
     @GetMapping("/create")
-    public String showCreateForm(Model model) {
+    public String showCreateForm(Model model, @AuthenticatedUser CustomUserDetails userDetails) {
 
         // Gather account information
-        CustomUserDetails userDetails = (CustomUserDetails) authenticationFacade.getAuthentication().getPrincipal();
         String userName = userDetails.getFirstName() + " " + userDetails.getLastName();
         model.addAttribute("userName", userName);
 
@@ -61,17 +63,48 @@ public class InvoiceController {
 
         model.addAttribute("invoice", invoiceForm);
 
-        return "invoice_form";
+        return "invoice/invoice_form";
+    }
+    
+    @GetMapping("/{id}")
+    public String viewInvoice(@PathVariable Long id, Model model, @AuthenticatedUser CustomUserDetails userDetails) {
+    	
+    	InvoiceViewResponse invoiceView = null;
+    	
+    	try {
+    		invoiceView = invoiceService.findInvoiceById(id);
+    		logger.info(invoiceView.toString());
+    	} catch(EntityNotFoundException e) {
+    		logger.error(e.getMessage());
+    		// handle the error here...
+    	}
+    	
+    	
+    	String userName = userDetails.getFirstName() + " " + userDetails.getLastName();
+        model.addAttribute("userName", userName);
+        
+        model.addAttribute("invoice", invoiceView);
+        
+    	return "invoice/invoice_view";
     }
 
     @PostMapping("")
-    public @ResponseBody CreateInvoiceResponse createInvoice(@RequestBody InvoiceFormModel invoiceForm) {
+    public String createInvoice(
+    		@ModelAttribute("invoice") InvoiceFormModel invoiceForm, 
+    		Model model, 
+    		@AuthenticatedUser CustomUserDetails userDetails
+    ) {
 
         logger.info(invoiceForm.toString());
 
-        CreateInvoiceResponse invoiceResponse = invoiceService.createInvoice(invoiceForm);
+        CreateInvoiceResponse invoiceResponse = invoiceService.createInvoice(invoiceForm, userDetails);
 
-        return invoiceResponse;
+        String userName = userDetails.getFirstName() + " " + userDetails.getLastName();
+        model.addAttribute("userName", userName);
+        
+        model.addAttribute("invoice", new CreateInvoiceResponse());
+        
+        return "redirect:/invoices/" + invoiceResponse.getInvoiceId();
     }
 
     @PutMapping("/{id}")
@@ -95,7 +128,7 @@ public class InvoiceController {
 
         model.addAttribute("invoices", invoiceItems);
         model.addAttribute("userName", userDetails.getFirstName() + " " + userDetails.getLastName());
-        return "invoice_list";
+        return "invoice/invoice_list";
     }
 
 }
