@@ -152,21 +152,6 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-12 mb-2">
-                                <div class="row">
-                                    <div class="col-md font-weight-bold">TAX RATE</div>
-                                    <div class="col-md">
-                                    <div class="input-group input-group-sm">
-                                        <div class="input-group-prepend">
-                                          <div class="input-group-text">$</div>
-                                        </div>
-                                        <input name="lineItemAmount" type="text" class="form-control" placeholder="Tax Rate">
-                                    </div>
-                                    </div>
-                                </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12 mb-2">
                                     <div class="row">
                                         <div class="col-md font-weight-bold">TAX</div>
                                         <div class="col-md thin-border">0.00</div>
