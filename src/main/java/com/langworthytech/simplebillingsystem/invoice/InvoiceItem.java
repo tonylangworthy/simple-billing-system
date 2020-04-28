@@ -20,12 +20,16 @@ public class InvoiceItem {
     
     private BigDecimal unitPrice;
     
+    // unitPrice * quantity
+    private BigDecimal lineSubtotal;
+    
     @Column(precision = 19, scale = 4)
     private BigDecimal taxRate;
     
+    // lineSubtotal * (taxRate / 100)
     private BigDecimal taxAmount;
 
-    // unit_price * quantity
+    // unitPrice * quantity + taxAmount
     @Column(nullable = false)
     private BigDecimal amount;
     
