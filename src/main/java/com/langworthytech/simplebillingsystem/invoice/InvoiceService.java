@@ -109,7 +109,7 @@ public class InvoiceService implements IInvoiceService {
 
         Account account = userDetails.getUser().getAccount();
 
-        Invoice invoice = createDraftInvoice();
+        Invoice invoice = createDraftInvoice(userDetails);
 
         Optional<Customer> optionalCustomer = customerRepository.findById(invoiceFormModel.getCustomerId());
         Customer customer = optionalCustomer.orElseThrow(() -> new EntityNotFoundException("Customer not found!"));
@@ -154,10 +154,7 @@ public class InvoiceService implements IInvoiceService {
     }
 
     @Override
-    public Invoice createDraftInvoice() {
-
-        AuthenticationFacade authenticationFacade = new AuthenticationFacade();
-        CustomUserDetails userDetails = (CustomUserDetails) authenticationFacade.getAuthentication().getPrincipal();
+    public Invoice createDraftInvoice(CustomUserDetails userDetails) {
 
         LocalDateTime dateTime = LocalDateTime.now();
         String createdDate = dateTime.format(DateTimeFormatter.ofPattern("MM/dd/yyyy h:m a"));

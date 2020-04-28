@@ -12,7 +12,7 @@ public interface IInvoiceService {
 
     CreateInvoiceResponse createInvoice(InvoiceFormModel invoiceFormModel, CustomUserDetails userDetails);
 
-    Invoice createDraftInvoice();
+    Invoice createDraftInvoice(CustomUserDetails userDetails);
 
     List<InvoiceListItemResponse> findAllInvoices();
 
