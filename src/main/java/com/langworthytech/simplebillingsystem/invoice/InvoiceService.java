@@ -77,12 +77,18 @@ public class InvoiceService implements IInvoiceService {
 
         BigDecimal itemSubtotal = calculateSubtotal(invoiceItem.getUnitPrice(), invoiceItem.getItemQuantity());
         
-        BigDecimal taxAmount = calculateSalesTax(invoiceItem.getTaxRate(), itemSubtotal);
+        BigDecimal taxAmount = new BigDecimal(0);
+        
+        if(invoiceItem.getTaxRate() != null) {
+        	taxAmount = calculateSalesTax(invoiceItem.getTaxRate(), itemSubtotal);
+        }
         
         BigDecimal itemTotal = calculateTotal(taxAmount, itemSubtotal);
         
         InvoiceItem item = new InvoiceItem();
         item.setQuantity(invoiceItem.getItemQuantity());
+        item.setUnitPrice(invoiceItem.getUnitPrice());
+        item.setLineSubtotal(itemSubtotal);
         item.setTaxRate(invoiceItem.getTaxRate());
         item.setTaxAmount(taxAmount);
         item.setAmount(itemTotal);
@@ -96,6 +102,7 @@ public class InvoiceService implements IInvoiceService {
         invoiceItemResponse.setProductName(savedInvoiceItem.getProduct().getName());
         invoiceItemResponse.setProductDescription(savedInvoiceItem.getProduct().getDescription());
         invoiceItemResponse.setUnitPrice(savedInvoiceItem.getAmount());
+        invoiceItemResponse.setLineSubtotal(savedInvoiceItem.getAmount());
         invoiceItemResponse.setQuantity(savedInvoiceItem.getQuantity());
         invoiceItemResponse.setTaxRate(savedInvoiceItem.getTaxRate());
         invoiceItemResponse.setTaxAmount(savedInvoiceItem.getTaxAmount());
@@ -123,6 +130,25 @@ public class InvoiceService implements IInvoiceService {
         invoiceFormModel.getInvoiceItems().forEach(item -> {
         	invoiceItemResponseList.add(createInvoiceItem(item));
         });
+        
+        BigDecimal invoiceSubtotal = new BigDecimal(0);
+        BigDecimal invoiceTax = new BigDecimal(0);
+        
+        
+        invoiceItemResponseList.forEach(item -> {
+        	
+        	invoiceSubtotal.add(item.getLineSubtotal());
+        	invoiceTax.add(item.getTaxAmount());
+        	
+        });
+
+        BigDecimal invoiceTotal = invoiceSubtotal.add(invoiceTax);
+
+        
+        invoice.setSubtotal(invoiceSubtotal);
+        invoice.setTax(invoiceTax);
+        invoice.setTotal(invoiceTotal);
+        
         
         invoiceResponse.setInvoiceItems(invoiceItemResponseList);
 

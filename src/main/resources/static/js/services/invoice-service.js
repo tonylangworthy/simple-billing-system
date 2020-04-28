@@ -385,7 +385,7 @@ const invoiceObj = new InvoiceService();
               source: customers
             });
 
-            $('#product-name-input').typeahead(options, {
+            $('#product-name-input-'+invoiceObj.lineItemCount).typeahead(options, {
               minLength: 3,
               display: 'name',
               source: products
@@ -403,7 +403,7 @@ const invoiceObj = new InvoiceService();
                 document.getElementById('customer-id-input').value = customer.id;
             });
 
-            $('#product-name-input').bind('typeahead:select', function(e, product) {
+            $('#product-name-input-'+invoiceObj.lineItemCount).bind('typeahead:select', function(e, product) {
                 console.log(product);
                 $('#description-input').val(product.description);
                 invoiceObj.productId = product.id;

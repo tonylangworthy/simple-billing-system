@@ -23,6 +23,8 @@ public class InvoiceItemResponse implements Serializable {
 
     private BigDecimal unitPrice;
     
+    private BigDecimal lineSubtotal;
+    
     private BigDecimal taxRate;
     
     private BigDecimal taxAmount;
@@ -37,6 +39,7 @@ public class InvoiceItemResponse implements Serializable {
     		String productDescription, 
     		int quantity, 
     		BigDecimal unitPrice,
+    		BigDecimal lineSubtotal,
     		BigDecimal taxRate,
     		BigDecimal taxAmount,
     		BigDecimal amount
@@ -46,6 +49,7 @@ public class InvoiceItemResponse implements Serializable {
     	this.productDescription = productDescription;
     	this.quantity = quantity;
     	this.unitPrice = unitPrice;
+    	this.lineSubtotal = lineSubtotal;
     	this.taxRate = taxRate;
     	this.taxAmount = taxAmount;
     	this.amount = amount;
@@ -90,8 +94,16 @@ public class InvoiceItemResponse implements Serializable {
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
     }
-    
-    public BigDecimal getTaxRate() {
+        
+    public BigDecimal getLineSubtotal() {
+		return lineSubtotal;
+	}
+
+	public void setLineSubtotal(BigDecimal lineSubtotal) {
+		this.lineSubtotal = lineSubtotal;
+	}
+
+	public BigDecimal getTaxRate() {
 		return taxRate;
 	}
 
