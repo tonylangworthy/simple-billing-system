@@ -18,12 +18,14 @@ public class InvoiceItem {
 
     private int quantity;
     
+    private BigDecimal unitPrice;
+    
     @Column(precision = 19, scale = 4)
     private BigDecimal taxRate;
     
     private BigDecimal taxAmount;
 
-    // unit_amount * quantity
+    // unit_price * quantity
     @Column(nullable = false)
     private BigDecimal amount;
     
