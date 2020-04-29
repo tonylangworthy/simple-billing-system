@@ -51,19 +51,9 @@ class InvoiceService {
     	let currentRow = this.lineItemCount;
     	
         $(this.getNewItemRow()).insertAfter('#line-item-form-row-'+currentRow);
-
-        $('#item-quantity-input-'+this.lineItemCount).on('change', function(e) {
-        	invoiceObj.addInvoiceItem(this);
-        });
-
-        $('#item-unit-price-input-'+this.lineItemCount).on('change', function(e) {
-        	invoiceObj.addInvoiceItem(this);
-        });
-
-        $('#tax-rate-input-'+this.lineItemCount).on('change', function(e) {
-        	invoiceObj.addInvoiceItem(this);
-        });
-
+        
+        this.registerNewProductTypeahead();
+        
 //        $('#product-name-input-'+this.lineItemCount).val('')
 //       $('#description-input-'+this.lineItemCount).val('')
 //       $('#item-quantity-input-'+this.lineItemCount).val('')
@@ -86,11 +76,12 @@ class InvoiceService {
         + '<div class="item-separator pt-3 mb-3"></div>'
         + '</div>'
         + '</div>'
+        + '<input type="hidden" name="invoiceItems['+(this.lineItemCount-1)+'].productId" id="product-id-input" value="" />'
 		+ '<div class="row" id="line-item-form-row-'+this.lineItemCount+'">'
 	    + '<div class="col-md">'
 	    + '<div class="form-row mb-2">'
 	    + '<div class="col-7">'
-	    + '<input name="invoiceItems['+(this.lineItemCount-1)+'].productName" type="text" class="form-control" id="product-name-input-'+this.lineItemCount+'" autocomplete="off" spellcheck="false" placeholder="Product or service">'
+	    + '<input name="invoiceItems['+(this.lineItemCount-1)+'].productName" type="text" class="form-control product-name" id="product-name-input-'+this.lineItemCount+'" autocomplete="off" spellcheck="false" placeholder="Product or service">'
 	    + '</div>'
 	    + '<div class="col-1">'
 	    + '<input name="invoiceItems['+(this.lineItemCount-1)+'].itemQuantity" type="text" class="form-control" id="item-quantity-input-'+this.lineItemCount+'" placeholder="Qty">'
@@ -306,6 +297,25 @@ class InvoiceService {
 
     } // end saveInvoice method
 
+	registerNewProductTypeahead() {
+		
+        let products = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
+            queryTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+            prefetch: '/products/autocomplete/term',
+            remote: {
+              url: '/products/autocomplete/term',
+              wildcard: "term"
+            }
+          });
+        
+        $('#product-name-input-' + this.lineItemCount).typeahead({highlight: true}, {
+            minLength: 3,
+            display: 'name',
+            source: products
+          });
+	}
+
     toBankersRounding(value, precision) {
         let exponentialForm = Number(value + 'e' + precision);
 
@@ -345,9 +355,10 @@ class InvoiceService {
 
 } // end Invoice class
 
-const invoiceObj = new InvoiceService();
 
         $(document).ready(function(){
+
+        	const invoiceObj = new InvoiceService();
 
             document.getElementById("invoice-subtotal").innerHTML = '$' + invoiceObj.invoice.subtotal.toFixed(2);
             document.getElementById("invoice-tax").innerHTML = '$' + invoiceObj.invoice.taxTotal.toFixed(2);
@@ -385,13 +396,13 @@ const invoiceObj = new InvoiceService();
               source: customers
             });
 
-            $('#product-name-input-'+invoiceObj.lineItemCount).typeahead(options, {
+            $('#product-name-input-1').typeahead(options, {
               minLength: 3,
               display: 'name',
               source: products
             });
 
-            $('.typeahead').bind('typeahead:select', function(e, customer) {
+            $('.typeahead').on('typeahead:select', function(e, customer) {
                 console.log(customer);
                 document.getElementById('bill-to').innerHTML =
                 "<strong>" + customer.firstName + " " + customer.lastName + "</strong><br>"
@@ -401,14 +412,6 @@ const invoiceObj = new InvoiceService();
 
                 invoiceObj.customerId = customer.id;
                 document.getElementById('customer-id-input').value = customer.id;
-            });
-
-            $('#product-name-input-'+invoiceObj.lineItemCount).bind('typeahead:select', function(e, product) {
-                console.log(product);
-                $('#description-input').val(product.description);
-                invoiceObj.productId = product.id;
-                console.log('productId: ' + productId);
-
             });
 
             $('#customer-save-btn').on('click', function(e) {
@@ -421,8 +424,18 @@ const invoiceObj = new InvoiceService();
                 });
             });
 
+            $('#invoice-form').on('typeahead:select', '.product-name', function(e, product) {
+                console.log(product);
+                $('#description-input-'+invoiceObj.lineItemCount).val(product.description);
+                invoiceObj.productId = product.id;
+                document.getElementById('product-id-input').value = product.id;
+                console.log('productId: ' + productId);
+
+            });
+
             $('#item-quantity-input-1').on('change', function(e) {
             	invoiceObj.addInvoiceItem(this);
+            	console.info('quantity change on input 1');
             });
 
             $('#item-unit-price-input-1').on('change', function(e) {

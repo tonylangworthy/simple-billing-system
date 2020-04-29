@@ -1,13 +1,28 @@
 package com.langworthytech.simplebillingsystem.invoice;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.langworthytech.simplebillingsystem.account.Account;
 import com.langworthytech.simplebillingsystem.product.Product;
+import com.langworthytech.simplebillingsystem.security.Role;
+import com.langworthytech.simplebillingsystem.security.User;
+
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
-@Data
+
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
 @Entity
 @Table(name = "invoice_items")
 public class InvoiceItem {
@@ -33,6 +48,9 @@ public class InvoiceItem {
     @Column(nullable = false)
     private BigDecimal amount;
     
+//    @EqualsAndHashCode.Exclude
+//    @ToString.Exclude
+//    @JsonManagedReference
     @OneToOne
     @JoinColumn(name = "product_id")
     private Product product;

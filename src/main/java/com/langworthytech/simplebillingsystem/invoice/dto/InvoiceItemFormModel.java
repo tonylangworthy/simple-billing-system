@@ -2,6 +2,8 @@ package com.langworthytech.simplebillingsystem.invoice.dto;
 
 import org.springframework.stereotype.Component;
 
+import com.langworthytech.simplebillingsystem.invoice.Invoice;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -12,6 +14,8 @@ public class InvoiceItemFormModel implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private Invoice invoice;
 
 	private Long productId;
 
@@ -19,13 +23,21 @@ public class InvoiceItemFormModel implements Serializable {
 
     private String productDescription;
 
-    private int itemQuantity;
+    private String itemQuantity;
 
     private BigDecimal unitPrice;
 
     private BigDecimal taxRate;
 
-    public Long getProductId() {
+    public Invoice getInvoice() {
+		return invoice;
+	}
+
+	public void setInvoice(Invoice invoice) {
+		this.invoice = invoice;
+	}
+
+	public Long getProductId() {
         return productId;
     }
 
@@ -49,11 +61,11 @@ public class InvoiceItemFormModel implements Serializable {
         this.productDescription = productDescription;
     }
 
-    public int getItemQuantity() {
+    public String getItemQuantity() {
         return itemQuantity;
     }
 
-    public void setItemQuantity(int itemQuantity) {
+    public void setItemQuantity(String itemQuantity) {
         this.itemQuantity = itemQuantity;
     }
 

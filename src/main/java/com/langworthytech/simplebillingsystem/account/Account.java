@@ -5,9 +5,12 @@ import com.langworthytech.simplebillingsystem.invoice.Invoice;
 import com.langworthytech.simplebillingsystem.security.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 
 import javax.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Data
@@ -49,17 +52,17 @@ public class Account {
     private List<Customer> customers = new ArrayList<>();
 
     @Column(updatable = false)
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
 
     @PrePersist
     protected void onCreate() {
-        this.createdAt = new Date();
+        this.createdAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        this.updatedAt = new Date();
+        this.updatedAt = LocalDateTime.now();
     }
 }

@@ -74,7 +74,7 @@
     		<div class="card">
     		    <div class="card-header">Create Invoice</div>
     		    <div class="card-body">
-                <form action="/invoices" method="post" autocomplete="off">
+                <form action="/invoices" method="post" autocomplete="off" id="invoice-form">
                     <input type="hidden" name="customerId" id="customer-id-input" value="" />
     		        <div class="row">
     		            <div class="col-md">
@@ -139,11 +139,12 @@
                     </div>
 
 
+                    <input type="hidden" name="invoiceItems[0].productId" id="product-id-input" value="" />
     		        <div class="row" id="line-item-form-row-1">
                         <div class="col-md">
                           <div class="form-row mb-2">
                             <div class="col-7">
-                                <input name="invoiceItems[0].productName" type="text" class="form-control" id="product-name-input-1" autocomplete="off" spellcheck="false" placeholder="Product or service">
+                                <input name="invoiceItems[0].productName" type="text" class="form-control product-name" id="product-name-input-1" autocomplete="off" spellcheck="false" placeholder="Product or service">
                             </div>
                             <div class="col-1">
                                 <input name="invoiceItems[0].itemQuantity" type="text" class="form-control" id="item-quantity-input-1" placeholder="Qty">
@@ -255,18 +256,6 @@
     	<script type="text/javascript" src="${pageContext.request.contextPath}/webjars/typeahead.js/0.11.1/dist/typeahead.bundle.min.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/js/services/invoice-service.js"></script>
-        <script type="text/javascript">
 
-
-
-
-
-
-
-
-
-
-
-        </script>
     </body>
 </html>

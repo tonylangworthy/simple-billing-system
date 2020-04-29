@@ -16,7 +16,7 @@ public class InvoiceFormModel implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long customerId;
-
+	
     private String invoiceNote;
     
     private BigDecimal taxTotal;
@@ -31,7 +31,7 @@ public class InvoiceFormModel implements Serializable {
         this.customerId = customerId;
     }
 
-    public String getInvoiceNote() {
+	public String getInvoiceNote() {
         return invoiceNote;
     }
 
