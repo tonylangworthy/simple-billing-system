@@ -1,9 +1,15 @@
 package com.langworthytech.simplebillingsystem.invoice;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.langworthytech.simplebillingsystem.account.Account;
 import com.langworthytech.simplebillingsystem.customer.Customer;
 import com.langworthytech.simplebillingsystem.security.User;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -14,7 +20,10 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
 @Entity
 @Table(name = "invoices")
 public class Invoice {
@@ -36,6 +45,9 @@ public class Invoice {
     @Column(length = 50)
     private String name;
 
+    @JsonManagedReference
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @OneToMany(mappedBy = "invoice")
     private Set<InvoiceItem> invoiceItems = new HashSet<>();
 

@@ -17,7 +17,7 @@ public class InvoiceItemFormModel implements Serializable {
 	
 	private Invoice invoice;
 
-	private Long productId;
+	private String productId;
 
     private String productName;
 
@@ -25,9 +25,9 @@ public class InvoiceItemFormModel implements Serializable {
 
     private String itemQuantity;
 
-    private BigDecimal unitPrice;
+    private String unitPrice;
 
-    private BigDecimal taxRate;
+    private String taxRate;
 
     public Invoice getInvoice() {
 		return invoice;
@@ -37,11 +37,11 @@ public class InvoiceItemFormModel implements Serializable {
 		this.invoice = invoice;
 	}
 
-	public Long getProductId() {
+	public String getProductId() {
         return productId;
     }
 
-    public void setProductId(Long productId) {
+    public void setProductId(String productId) {
         this.productId = productId;
     }
 
@@ -69,19 +69,19 @@ public class InvoiceItemFormModel implements Serializable {
         this.itemQuantity = itemQuantity;
     }
 
-    public BigDecimal getUnitPrice() {
+    public String getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(BigDecimal unitPrice) {
+    public void setUnitPrice(String unitPrice) {
         this.unitPrice = unitPrice;
     }
 
-    public BigDecimal getTaxRate() {
+    public String getTaxRate() {
         return taxRate;
     }
 
-    public void setTaxRate(BigDecimal taxRate) {
+    public void setTaxRate(String taxRate) {
         this.taxRate = taxRate;
     }
 

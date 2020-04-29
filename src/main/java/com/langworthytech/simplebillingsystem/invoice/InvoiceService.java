@@ -66,50 +66,56 @@ public class InvoiceService implements IInvoiceService {
     	
     	logger.info(invoiceItem.toString());
 
-//        Product product = null;
-//
-//        if(invoiceItem.getProductId() == null) {
-//            product = new Product(invoiceItem.getProductName(), invoiceItem.getProductDescription());
-//            productService.createProduct(product);
-//        }
-//        else {
-//            Optional<Product> optionalProduct = productService.findProductById(invoiceItem.getProductId());
-//            product = optionalProduct.orElseThrow(() -> new EntityNotFoundException("Product not found!"));
-//        }
-//
-//        BigDecimal itemSubtotal = calculateSubtotal(invoiceItem.getUnitPrice(), invoiceItem.getItemQuantity());
-//        
-//        BigDecimal taxAmount = new BigDecimal(0);
-//        
-//        if(invoiceItem.getTaxRate() != null) {
-//        	taxAmount = calculateSalesTax(invoiceItem.getTaxRate(), itemSubtotal);
-//        }
-//        
-//        BigDecimal itemTotal = calculateTotal(taxAmount, itemSubtotal);
-//        
-//        InvoiceItem item = new InvoiceItem();
-//        item.setInvoice(invoiceItem.getInvoice());
-//        item.setQuantity(invoiceItem.getItemQuantity());
-//        item.setUnitPrice(invoiceItem.getUnitPrice());
-//        item.setLineSubtotal(itemSubtotal);
-//        item.setTaxRate(invoiceItem.getTaxRate());
-//        item.setTaxAmount(taxAmount);
-//        item.setAmount(itemTotal);
-//
-//        item.setProduct(product);
-//
-//        InvoiceItem savedInvoiceItem = invoiceItemRepository.save(item);
+        Product product = null;
+
+        if(invoiceItem.getProductId() == null) {
+            product = new Product(invoiceItem.getProductName(), invoiceItem.getProductDescription());
+            productService.createProduct(product);
+        }
+        else {
+        	Long productId = Long.valueOf(invoiceItem.getProductId());
+            Optional<Product> optionalProduct = productService.findProductById(productId);
+            product = optionalProduct.orElseThrow(() -> new EntityNotFoundException("Product not found!"));
+        }
+        BigDecimal unitPrice = new BigDecimal(invoiceItem.getUnitPrice());
+        int quantity = Integer.valueOf(invoiceItem.getItemQuantity());
+        BigDecimal taxRate = new BigDecimal(invoiceItem.getTaxRate());
+    	taxRate.setScale(4);
+
+        BigDecimal itemSubtotal = calculateSubtotal(unitPrice, quantity);
+        
+        BigDecimal taxAmount = new BigDecimal(0);
+        
+        if(invoiceItem.getTaxRate() != null) {
+        	
+        	taxAmount = calculateSalesTax(taxRate, itemSubtotal);
+        }
+        
+        BigDecimal itemTotal = calculateTotal(taxAmount, itemSubtotal);
+        
+        InvoiceItem item = new InvoiceItem();
+        item.setInvoice(invoiceItem.getInvoice());
+        item.setQuantity(Integer.valueOf(invoiceItem.getItemQuantity()));
+        item.setUnitPrice(new BigDecimal(invoiceItem.getUnitPrice()));
+        item.setLineSubtotal(itemSubtotal);
+        item.setTaxRate(taxRate);
+        item.setTaxAmount(taxAmount);
+        item.setAmount(itemTotal);
+
+        item.setProduct(product);
+
+        InvoiceItem savedInvoiceItem = invoiceItemRepository.save(item);
 
         InvoiceItemResponse invoiceItemResponse = new InvoiceItemResponse();
-//        invoiceItemResponse.setInvoiceItemId(savedInvoiceItem.getId());
-//        invoiceItemResponse.setProductName(savedInvoiceItem.getProduct().getName());
-//        invoiceItemResponse.setProductDescription(savedInvoiceItem.getProduct().getDescription());
-//        invoiceItemResponse.setUnitPrice(savedInvoiceItem.getAmount());
-//        invoiceItemResponse.setLineSubtotal(savedInvoiceItem.getAmount());
-//        invoiceItemResponse.setQuantity(savedInvoiceItem.getQuantity());
-//        invoiceItemResponse.setTaxRate(savedInvoiceItem.getTaxRate());
-//        invoiceItemResponse.setTaxAmount(savedInvoiceItem.getTaxAmount());
-//        invoiceItemResponse.setAmount(savedInvoiceItem.getAmount());
+        invoiceItemResponse.setInvoiceItemId(savedInvoiceItem.getId());
+        invoiceItemResponse.setProductName(savedInvoiceItem.getProduct().getName());
+        invoiceItemResponse.setProductDescription(savedInvoiceItem.getProduct().getDescription());
+        invoiceItemResponse.setUnitPrice(savedInvoiceItem.getAmount());
+        invoiceItemResponse.setLineSubtotal(savedInvoiceItem.getAmount());
+        invoiceItemResponse.setQuantity(savedInvoiceItem.getQuantity());
+        invoiceItemResponse.setTaxRate(savedInvoiceItem.getTaxRate());
+        invoiceItemResponse.setTaxAmount(savedInvoiceItem.getTaxAmount());
+        invoiceItemResponse.setAmount(savedInvoiceItem.getAmount());
 
         return invoiceItemResponse;
     }
@@ -121,7 +127,9 @@ public class InvoiceService implements IInvoiceService {
 
         Invoice invoice = createDraftInvoice(userDetails);
 
-        Optional<Customer> optionalCustomer = customerRepository.findById(invoiceFormModel.getCustomerId());
+        Long customerId = Long.valueOf(invoiceFormModel.getCustomerId());
+        
+        Optional<Customer> optionalCustomer = customerRepository.findById(customerId);
         Customer customer = optionalCustomer.orElseThrow(() -> new EntityNotFoundException("Customer not found!"));
         invoice.setCustomer(customer);
 

@@ -43,7 +43,7 @@ public class ProductService implements IProductService {
 
     @Override
     public List<Product> searchProductsStartsWith(String searchTerm) {
-        return productRepository.findByNameStartsWith(searchTerm);
+        return productRepository.findByNameContaining(searchTerm);
     }
 
     public Product createProductFromModel(ProductFormModel productForm) {

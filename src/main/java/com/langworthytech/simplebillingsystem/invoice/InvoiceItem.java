@@ -1,5 +1,6 @@
 package com.langworthytech.simplebillingsystem.invoice;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.langworthytech.simplebillingsystem.account.Account;
 import com.langworthytech.simplebillingsystem.product.Product;
@@ -55,6 +56,7 @@ public class InvoiceItem {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "invoice_id")
     private Invoice invoice;

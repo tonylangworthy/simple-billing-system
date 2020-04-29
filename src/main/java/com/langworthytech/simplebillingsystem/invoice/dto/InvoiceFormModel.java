@@ -15,19 +15,19 @@ public class InvoiceFormModel implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private Long customerId;
+	private String customerId;
 	
     private String invoiceNote;
     
-    private BigDecimal taxTotal;
+    private String taxTotal;
 
     private List<InvoiceItemFormModel> invoiceItems = new ArrayList<>();
 
-    public Long getCustomerId() {
+    public String getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(Long customerId) {
+    public void setCustomerId(String customerId) {
         this.customerId = customerId;
     }
 
@@ -47,11 +47,11 @@ public class InvoiceFormModel implements Serializable {
         this.invoiceItems = invoiceItems;
     }
 
-    public BigDecimal getTaxTotal() {
+    public String getTaxTotal() {
         return taxTotal;
     }
 
-    public void setTaxTotal(BigDecimal taxTotal) {
+    public void setTaxTotal(String taxTotal) {
         this.taxTotal = taxTotal;
     }
 

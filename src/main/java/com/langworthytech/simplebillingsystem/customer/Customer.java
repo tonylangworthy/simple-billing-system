@@ -6,6 +6,8 @@ import com.langworthytech.simplebillingsystem.security.User;
 import lombok.Data;
 
 import javax.persistence.*;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,7 +15,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "customers")
-public class Customer {
+public class Customer implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

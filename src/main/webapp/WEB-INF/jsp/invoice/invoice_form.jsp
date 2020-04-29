@@ -139,7 +139,7 @@
                     </div>
 
 
-                    <input type="hidden" name="invoiceItems[0].productId" id="product-id-input" value="" />
+                    <input type="hidden" name="invoiceItems[0].productId" id="product-id-input-1" value="" />
     		        <div class="row" id="line-item-form-row-1">
                         <div class="col-md">
                           <div class="form-row mb-2">

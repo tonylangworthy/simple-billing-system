@@ -10,13 +10,14 @@ import lombok.ToString;
 
 import javax.persistence.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Data
 @Entity
 @Table(name = "accounts")
-public class Account {
+public class Account implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

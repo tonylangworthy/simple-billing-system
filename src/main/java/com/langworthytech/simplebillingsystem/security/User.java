@@ -1,5 +1,6 @@
 package com.langworthytech.simplebillingsystem.security;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.langworthytech.simplebillingsystem.account.Account;
 import com.langworthytech.simplebillingsystem.customer.Customer;
 import com.langworthytech.simplebillingsystem.invoice.Invoice;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,7 +28,7 @@ import java.util.List;
 @ToString
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,6 +67,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Collection<Role> roles;
 
+    @JsonManagedReference
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @OneToMany(mappedBy = "user")

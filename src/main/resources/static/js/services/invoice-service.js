@@ -76,7 +76,7 @@ class InvoiceService {
         + '<div class="item-separator pt-3 mb-3"></div>'
         + '</div>'
         + '</div>'
-        + '<input type="hidden" name="invoiceItems['+(this.lineItemCount-1)+'].productId" id="product-id-input" value="" />'
+        + '<input type="hidden" name="invoiceItems['+(this.lineItemCount-1)+'].productId" id="product-id-input-'+this.lineItemCount+'" value="" />'
 		+ '<div class="row" id="line-item-form-row-'+this.lineItemCount+'">'
 	    + '<div class="col-md">'
 	    + '<div class="form-row mb-2">'
@@ -355,10 +355,10 @@ class InvoiceService {
 
 } // end Invoice class
 
+const invoiceObj = new InvoiceService();
+
 
         $(document).ready(function(){
-
-        	const invoiceObj = new InvoiceService();
 
             document.getElementById("invoice-subtotal").innerHTML = '$' + invoiceObj.invoice.subtotal.toFixed(2);
             document.getElementById("invoice-tax").innerHTML = '$' + invoiceObj.invoice.taxTotal.toFixed(2);
@@ -428,7 +428,7 @@ class InvoiceService {
                 console.log(product);
                 $('#description-input-'+invoiceObj.lineItemCount).val(product.description);
                 invoiceObj.productId = product.id;
-                document.getElementById('product-id-input').value = product.id;
+                document.getElementById('product-id-input-'+invoiceObj.lineItemCount).value = product.id;
                 console.log('productId: ' + productId);
 
             });
