@@ -1,9 +1,8 @@
 package com.langworthytech.simplebillingsystem.security;
 
-import com.langworthytech.simplebillingsystem.account.Account;
-import com.langworthytech.simplebillingsystem.account.AccountRepository;
+import com.langworthytech.simplebillingsystem.model.Account;
+import com.langworthytech.simplebillingsystem.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,8 +1,5 @@
 package com.langworthytech.simplebillingsystem.security;
 
-import com.langworthytech.simplebillingsystem.account.Account;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 

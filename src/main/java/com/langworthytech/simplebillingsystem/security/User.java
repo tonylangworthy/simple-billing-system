@@ -1,30 +1,21 @@
 package com.langworthytech.simplebillingsystem.security;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.langworthytech.simplebillingsystem.account.Account;
-import com.langworthytech.simplebillingsystem.customer.Customer;
-import com.langworthytech.simplebillingsystem.invoice.Invoice;
-import com.langworthytech.simplebillingsystem.product.Product;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import com.langworthytech.simplebillingsystem.model.Account;
+import com.langworthytech.simplebillingsystem.model.Invoice;
+import com.langworthytech.simplebillingsystem.model.Product;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 @Getter
 @Setter
-@EqualsAndHashCode
 @ToString
 @Entity
 @Table(name = "users")
@@ -67,14 +58,9 @@ public class User implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Collection<Role> roles;
 
-    @JsonManagedReference
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
     @OneToMany(mappedBy = "user")
     private List<Product> products = new ArrayList<>();
 
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
     @OneToMany(mappedBy = "user")
     private List<Invoice> invoices = new ArrayList<>();
 
@@ -82,4 +68,24 @@ public class User implements Serializable {
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hashCode(email);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (obj instanceof User) {
+            if (((User) obj).getEmail().equals(getEmail())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

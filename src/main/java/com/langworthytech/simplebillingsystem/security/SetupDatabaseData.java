@@ -1,18 +1,14 @@
 package com.langworthytech.simplebillingsystem.security;
 
-import com.langworthytech.simplebillingsystem.account.Account;
-import com.langworthytech.simplebillingsystem.account.AccountRepository;
-import com.langworthytech.simplebillingsystem.account.AccountService;
-import com.langworthytech.simplebillingsystem.invoice.InvoiceStatus;
+import com.langworthytech.simplebillingsystem.model.Account;
+import com.langworthytech.simplebillingsystem.service.AccountService;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 

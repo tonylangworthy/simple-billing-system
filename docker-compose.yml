@@ -1,0 +1,21 @@
+version: '3.1'
+
+services:
+
+  # Database Service
+  postgres-db:
+    image: postgres:13.1
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./my-postgres.conf:/etc/postgresql/postgresql.conf
+
+#Volumes
+volumes:
+  pgdata:
+    driver: local
