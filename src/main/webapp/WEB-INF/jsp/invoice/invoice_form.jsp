@@ -111,7 +111,7 @@
     		            </div>
     		        </div>
     		        <div class="row saved-line-item">
-    		            <div class="col-md-7">
+    		            <div class="col-md-9">
     		                <div class="pl-1 font-weight-bold">
     		                    Product or Service
     		                </div>
@@ -126,49 +126,37 @@
     		                    Unit Price
     		                </div>
     		            </div>
-    		            <div class="col-md-2 font-weight-bold">
-    		                <div>
-    		                    Tax
-    		                </div>
-    		            </div>
     		        </div>
     		        <div class="row">
                         <div class="col-md">
                             <hr>
                         </div>
                     </div>
+                    <div class="item-row"></div>
 
 
                     <input type="hidden" name="invoiceItems[0].productId" id="product-id-input-1" value="" />
     		        <div class="row" id="line-item-form-row-1">
                         <div class="col-md">
                           <div class="form-row mb-2">
-                            <div class="col-7">
-                                <input name="invoiceItems[0].productName" type="text" class="form-control product-name" id="product-name-input-1" autocomplete="off" spellcheck="false" placeholder="Product or service">
+                            <div class="col-9">
+                                <input name="product-name" type="text" class="form-control product-name" id="product-name-input" autocomplete="off" spellcheck="false" placeholder="Product or service">
                             </div>
                             <div class="col-1">
-                                <input name="invoiceItems[0].itemQuantity" type="text" class="form-control" id="item-quantity-input-1" placeholder="Qty">
+                                <input name="product-quantity" type="text" class="form-control" id="product-quantity-input" placeholder="Qty">
                             </div>
                             <div class="col-2">
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                       <div class="input-group-text">$</div>
                                     </div>
-                                    <input name="invoiceItems[0].unitPrice" type="text" class="form-control" id="item-unit-price-input-1" placeholder="Unit price">
-                                </div>
-                            </div>
-                            <div class="col-2">
-                                <div class="input-group">
-                                    <input name="invoiceItems[0].taxRate" type="text" class="form-control" id="tax-rate-input-1" placeholder="Tax Rate">
-                                    <div class="input-group-append">
-                                      <div class="input-group-text">%</div>
-                                    </div>
+                                    <input name="product-price" type="text" class="form-control" id="product-price-input" placeholder="Unit price">
                                 </div>
                             </div>
                           </div>
                          <div class="row">
                               <div class="col-md-12">
-                                  <textarea name="invoiceItems[0].productDescription" id="description-input-1" class="form-control" placeholder="Provide a brief description of your product or service"></textarea>
+                                  <textarea name="product-description" id="product-description-input" class="form-control" placeholder="Provide a brief description of your product or service"></textarea>
                               </div>
                           </div>
 
@@ -177,8 +165,7 @@
                     <div class="row">
                     	<div class="col-12">
                           <div class="btn-group mt-2" role="group" aria-label="Row Button Bar">
-								 <button type="button" class="btn btn-success" id="add-item-row-btn">+ Add</button>
-								 <button type="button" class="btn btn-danger" id="remove-item-row-btn">- Remove</button>
+								 <button type="button" class="btn btn-link" id="add-item-row-btn">+ Add Item</button>
 							</div>
                     	</div>
                     </div>
@@ -189,28 +176,56 @@
                                 <textarea name="invoiceNote" class="form-control" id="invoice-note-input" rows="3"></textarea>
                             </div>
                         </div>
-                        <div class="col-3 offset-3">
+                        <div class="col offset-2 ml-6">
                             <div class="row">
-                                <div class="col-md-12 mb-2">
+                                <div class="col mb-3">
+                                    <div class="row">
+                                        <div class="col-md font-weight-bold">TAX RATE</div>
+                                        <div class="col-md-6">
+                                            <div class="input-group">
+                                                <input name="tax-rate" type="text" class="form-control" id="tax-rate-input">
+                                                <div class="input-group-append"><div class="input-group-text">%</div></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
                                     <div class="row">
                                         <div class="col-md font-weight-bold">SUBTOTAL</div>
-                                        <div class="col-md thin-border" id="invoice-subtotal"></div>
+                                        <div class="col-md-6">
+                                            <div class="input-group">
+                                                <div class="input-group-append"><div class="input-group-text">$</div></div>
+                                                <input name="subtotal" type="text" class="form-control" id="subtotal-input">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-12 mb-2">
+                                <div class="col-md-12 mb-3">
                                     <div class="row">
-                                        <div class="col-md font-weight-bold">TAX</div>
-                                        <div class="col-md thin-border" id="invoice-tax"></div>
+                                        <div class="col-md font-weight-bold">TAX TOTAL</div>
+                                        <div class="col-md-6">
+                                            <div class="input-group">
+                                                <div class="input-group-append"><div class="input-group-text">$</div></div>
+                                                <input name="tax-total" type="text" class="form-control" id="tax-total-input">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-12 mb-2">
+                                <div class="col-md-12 mb-3">
                                     <div class="row">
                                         <div class="col-md font-weight-bold">TOTAL</div>
-                                        <div class="col-md thin-border" id="invoice-total"></div>
+                                        <div class="col-md-6">
+                                            <div class="input-group">
+                                                <div class="input-group-append"><div class="input-group-text">$</div></div>
+                                                <input name="invoice-total" type="text" class="form-control" id="invoice-total-input">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -256,6 +271,6 @@
     	<script type="text/javascript" src="${pageContext.request.contextPath}/webjars/typeahead.js/0.11.1/dist/typeahead.bundle.min.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/js/services/invoice-service.js"></script>
-
+        <script type="module" src="${pageContext.request.contextPath}/js/main.js"></script>
     </body>
 </html>

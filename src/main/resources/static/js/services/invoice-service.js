@@ -27,8 +27,8 @@ class InvoiceService {
     	console.log("Element: " + el.name + " -- Value: " + el.value);
         this.createLineItemObject();
 //        this.displayLineItem();
-        this.calculateSubtotal();
-        this.calculateSalesTax();
+        // this.calculateSubtotal();
+        // this.calculateSalesTax();
     }
 
     createLineItemObject() {
